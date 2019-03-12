@@ -48,9 +48,9 @@
     <select id="getById" resultMap="${meta.firstLowerClassName}Map">
         select
         <include refid="SQL_${meta.tableNameUC}_COLUMN"/>
-        from ${meta.tableNameUC}
-        where id = ${r'#{id}'}
-        and status != '9'
+        from ${meta.tableNameUC} ${meta.tableAlias}
+        where ${meta.tableAlias}.id = ${r'#{id}'}
+        and ${meta.tableAlias}.status != '9'
     </select>
 
     <#--create-->

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="net.vtstar.codegenerator.record.mapper.CreateTableRecordMapper">
+
+    <!-- result map -->
+    <resultMap type="net.vtstar.codegenerator.record.domain.CreateTableRecord" id="createTableRecordMap">
+            <id property="id" column="id" javaType="Long"/>
+            <result property="recordId" column="record_id" javaType="Long"/>
+            <result property="tableName" column="table_name" javaType="String"/>
+            <result property="status" column="status" javaType="String"/>
+            <result property="createTime" column="create_time" javaType="java.util.Date"/>
+            <result property="updateTime" column="update_time" javaType="java.util.Date"/>
+            <collection property="columnRecordList"
+                    ofType="net.vtstar.codegenerator.record.domain.CreateColumnRecord"
+                    select="net.vtstar.codegenerator.record.mapper.CreateColumnRecordMapper.getByTableId"
+                    column="id"/>
+    </resultMap>
+
+    <!-- sqlColumn-->
+    <sql id="SQL_CREATE_TABLE_RECORD_COLUMN">
+            ctr.id,
+            ctr.record_id,
+            ctr.table_name,
+            ctr.status,
+            ctr.create_time,
+            ctr.update_time
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_CREATE_TABLE_RECORD_WHERE">
+        <if test="null != id">
+            AND ctr.id = #{id}
+        </if>
+        <if test="null != recordId">
+            AND ctr.record_id = #{recordId}
+        </if>
+        <if test="null != tableName and tableName.length() != 0">
+            AND ctr.table_name = #{tableName}
+        </if>
+        <if test="null != status and status.length() != 0">
+            AND ctr.status = #{status}
+        </if>
+        <if test="null != createTime">
+            AND ctr.create_time = #{createTime}
+        </if>
+        <if test="null != updateTime">
+            AND ctr.update_time = #{updateTime}
+        </if>
+    </sql>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="net.vtstar.codegenerator.record.domain.CreateTableRecord" resultMap="createTableRecordMap">
+        select
+        <include refid="SQL_CREATE_TABLE_RECORD_COLUMN"/>
+        from CREATE_TABLE_RECORD ctr
+        <where>
+            <include refid="SQL_CREATE_TABLE_RECORD_WHERE"/>
+        </where>
+    </select>
+
+    <!-- 根据ID查询 -->
+    <select id="getByRecordId" resultMap="createTableRecordMap">
+        select
+        <include refid="SQL_CREATE_TABLE_RECORD_COLUMN"/>
+        from CREATE_TABLE_RECORD ctr
+        where ctr.record_id = #{id}
+        and ctr.status != '9'
+    </select>
+
+    <!-- 根据ID查询 -->
+    <select id="getById" resultMap="createTableRecordMap">
+        select
+        <include refid="SQL_CREATE_TABLE_RECORD_COLUMN"/>
+        from CREATE_TABLE_RECORD ctr
+        where ctr.id = #{id}
+        and ctr.status != '9'
+    </select>
+
+    <!-- 新增 -->
+    <insert id="create" parameterType="net.vtstar.codegenerator.record.domain.CreateTableRecord">
+        insert into CREATE_TABLE_RECORD
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != id">
+                id,
+            </if>
+            <if test="null != recordId">
+                record_id,
+            </if>
+            <if test="null != tableName">
+                table_name,
+            </if>
+            <if test="null != status">
+                status,
+            </if>
+            <if test="null != createTime">
+                create_time,
+            </if>
+            <if test="null != updateTime">
+                update_time
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != id">
+                #{id},
+            </if>
+            <if test="null != recordId">
+                #{recordId},
+            </if>
+            <if test="null != tableName">
+                #{tableName},
+            </if>
+            <if test="null != status">
+                #{status},
+            </if>
+            <if test="null != createTime">
+                #{createTime},
+            </if>
+            <if test="null != updateTime">
+                #{updateTime}
+            </if>
+        </trim>
+        <selectKey resultType="Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+    </insert>
+
+    <!-- 根据id删除（逻辑删除） -->
+    <update id="deleteById">
+        update CREATE_TABLE_RECORD
+        set status = '9'
+        where id = #{id}
+    </update>
+
+
+    <!-- update -->
+    <update id="update">
+        update CREATE_TABLE_RECORD
+        <set>
+            <if test="null != id">
+                id = #{id},
+            </if>
+            <if test="null != recordId">
+                record_id = #{recordId},
+            </if>
+            <if test="null != tableName">
+                table_name = #{tableName},
+            </if>
+            <if test="null != status">
+                status = #{status},
+            </if>
+            <if test="null != createTime">
+                create_time = #{createTime},
+            </if>
+            <if test="null != updateTime">
+                update_time = #{updateTime}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

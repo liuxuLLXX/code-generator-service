@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="net.vtstar.codegenerator.record.mapper.OperateRecordMapper">
+
+    <!-- result map -->
+    <resultMap type="net.vtstar.codegenerator.record.domain.OperateRecord" id="operateRecordMap">
+            <id property="id" column="id" javaType="Long"/>
+            <result property="userId" column="user_id" javaType="Long"/>
+            <result property="name" column="name" javaType="String"/>
+            <result property="username" column="username" javaType="String"/>
+            <result property="host" column="host" javaType="String"/>
+            <result property="dbName" column="db_name" javaType="String"/>
+            <result property="dbUsername" column="db_username" javaType="String"/>
+            <result property="status" column="status" javaType="String"/>
+            <result property="createTime" column="create_time" javaType="java.util.Date"/>
+            <result property="updateTime" column="update_time" javaType="java.util.Date"/>
+            <collection property="tableRecordList"
+                    ofType="net.vtstar.codegenerator.record.domain.CreateTableRecord"
+                    select="net.vtstar.codegenerator.record.mapper.CreateTableRecordMapper.getByRecordId"
+                    column="id"/>
+
+    </resultMap>
+
+    <!-- sqlColumn-->
+    <sql id="SQL_OPERATE_RECORD_COLUMN">
+             id,
+             user_id,
+             name,
+             username,
+             host,
+             db_name,
+             db_username,
+             status,
+             create_time,
+             update_time
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_OPERATE_RECORD_WHERE">
+        <if test="null != id">
+            AND  id = #{id}
+        </if>
+        <if test="null != name and name.length() != 0">
+            AND (
+            name LIKE CONCAT(CONCAT('%',#{name},'%'))
+            OR username LIKE CONCAT(CONCAT('%',#{name},'%'))
+            OR db_name LIKE CONCAT(CONCAT('%',#{name},'%'))
+            )
+        </if>
+
+    </sql>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="net.vtstar.codegenerator.record.domain.OperateRecord" resultMap="operateRecordMap">
+        select
+        <include refid="SQL_OPERATE_RECORD_COLUMN"/>
+        from OPERATE_RECORD
+        <where>
+            <include refid="SQL_OPERATE_RECORD_WHERE"/>
+        </where>
+    </select>
+
+    <!-- 根据ID查询 -->
+    <select id="getById" resultMap="operateRecordMap">
+        select
+        <include refid="SQL_OPERATE_RECORD_COLUMN"/>
+        from OPERATE_RECORD
+        where id = #{id}
+        and status != '9'
+    </select>
+
+    <!-- 新增 -->
+    <insert id="create" parameterType="net.vtstar.codegenerator.record.domain.OperateRecord">
+        insert into OPERATE_RECORD
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != id">
+                id,
+            </if>
+            <if test="null != userId">
+                user_id,
+            </if>
+            <if test="null != name">
+                name,
+            </if>
+            <if test="null != username">
+                username,
+            </if>
+            <if test="null != host">
+                host,
+            </if>
+            <if test="null != dbName">
+                db_name,
+            </if>
+            <if test="null != dbUsername">
+                db_username,
+            </if>
+            <if test="null != status">
+                status,
+            </if>
+            <if test="null != createTime">
+                create_time,
+            </if>
+            <if test="null != updateTime">
+                update_time
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != id">
+                #{id},
+            </if>
+            <if test="null != userId">
+                #{userId},
+            </if>
+            <if test="null != name">
+                #{name},
+            </if>
+            <if test="null != username">
+                #{username},
+            </if>
+            <if test="null != host">
+                #{host},
+            </if>
+            <if test="null != dbName">
+                #{dbName},
+            </if>
+            <if test="null != dbUsername">
+                #{dbUsername},
+            </if>
+            <if test="null != status">
+                #{status},
+            </if>
+            <if test="null != createTime">
+                #{createTime},
+            </if>
+            <if test="null != updateTime">
+                #{updateTime}
+            </if>
+        </trim>
+        <selectKey resultType="Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+    </insert>
+
+    <!-- 根据id删除（逻辑删除） -->
+    <update id="deleteById">
+        update OPERATE_RECORD
+        set status = '9'
+        where id = #{id}
+    </update>
+
+
+    <!-- update -->
+    <update id="update">
+        update OPERATE_RECORD
+        <set>
+            <if test="null != id">
+                id = #{id},
+            </if>
+            <if test="null != userId">
+                user_id = #{userId},
+            </if>
+            <if test="null != name">
+                name = #{name},
+            </if>
+            <if test="null != username">
+                username = #{username},
+            </if>
+            <if test="null != host">
+                host = #{host},
+            </if>
+            <if test="null != host">
+                dbName = #{dbName},
+            </if>
+            <if test="null != dbUsername">
+                db_username = #{dbUsername},
+            </if>
+            <if test="null != status">
+                status = #{status},
+            </if>
+            <if test="null != createTime">
+                create_time = #{createTime},
+            </if>
+            <if test="null != updateTime">
+                update_time = #{updateTime}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>
