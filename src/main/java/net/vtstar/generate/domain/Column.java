@@ -1,68 +1,43 @@
 package net.vtstar.generate.domain;
 
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import net.vtstar.generate.utils.CamelCaseUtil;
 
-/**
- * 每一列详细信息 包含字段长度，类型，列名称。
- * 
- * @author henry
- * @author qiujingde
- * 
- */
+@ApiModel("每一列详细信息 包含字段长度，类型，列名称")
 @Data
 public class Column {
 
-    /**
-     *
-     */
+    @ApiModelProperty(notes = "列名")
     private String colName;
 
-    /**
-     * 字段注释
-     */
+    @ApiModelProperty(notes = "字段注释")
     private String colDesc;
 
-    /**
-     *
-     */
+    @ApiModelProperty(notes = "字段类型")
     private String colType;
 
-    /**
-     *
-     */
+    @ApiModelProperty(notes = "字段JAVA类型")
     private String javaType;
 
-    /**
-     *
-     */
+    @ApiModelProperty(notes = "java属性名")
     private String fieldName;
 
-    /**
-     * 首字母大写。
-     */
+    @ApiModelProperty(notes = "首字母大写的java属性名")
     private String fieldNameBig;
 
-    /**
-     * 是否为空。
-     */
+    @ApiModelProperty(notes = "是否为空")
     private String nullable;
 
-    /**
-     *
-     */
+    @ApiModelProperty(notes = "长度")
     private String length;
 
-    /**
-     *
-     */
+    @ApiModelProperty(notes = "set方法名称")
     private String seOperName;
 
-    /**
-     *
-     */
+    @ApiModelProperty(notes = "get方法名称")
     private String geOperName;
 
     /**
@@ -78,9 +53,9 @@ public class Column {
     private Table table;
 
 
-
     /**
      * 设置列明，同时根据列名生成get，set名。
+     *
      * @param colName 列名
      */
     public void setColName(String colName) {
@@ -112,6 +87,7 @@ public class Column {
 
     /**
      * 首字母大写。
+     *
      * @param field 列名
      */
     public void setFieldNameBig(String field) {
@@ -170,6 +146,7 @@ public class Column {
     public Table getTable() {
         return table;
     }
+
     @JsonBackReference
     public void setTable(Table table) {
         this.table = table;

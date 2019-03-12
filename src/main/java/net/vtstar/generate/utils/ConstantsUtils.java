@@ -39,5 +39,8 @@ public class ConstantsUtils {
     public static final String TABLE_ALIAS = "tableAlias";
 
 
+    public static final String TENANT_DEFAULT = "default";
+
+
 
 }

@@ -33,19 +33,6 @@
         </#list>
     </sql>
 
-    <#--getById-->
-    <!-- According to the id check record ;-->
-    <select id="getById" parameterType="long" resultType="${pkgName}.${meta.module}.${domainFolder}.${meta.className}">
-        select
-        <include refid="SQL_${meta.tableNameUC}_COLUMN"/>
-        from ${meta.tableNameUC} ${meta.tableAlias}
-        <where>
-            <#list meta.pkCols as col>
-                ${meta.tableAlias}.${col.colName} = ${r'#{idValue}'}
-            </#list>
-        </where>
-    </select>
-
     <#--getList-->
     <!-- Query All  -->
     <select id="getList" parameterType="${pkgName}.${meta.module}.${domainFolder}.${meta.className}" resultMap="${meta.firstLowerClassName}Map">
@@ -61,19 +48,19 @@
     <select id="getById" resultMap="${meta.firstLowerClassName}Map">
         select
         <include refid="SQL_${meta.tableNameUC}_COLUMN"/>
-        from ${meta.tableNameUC} ${meta.tableAlias}
-        where ${meta.tableAlias}.id = ${r'#{id}'}
+        from ${meta.tableNameUC}
+        where id = ${r'#{id}'}
         and status != '9'
     </select>
 
     <#--create-->
     <!-- 新增 -->
     <insert id="create" parameterType="${pkgName}.${meta.module}.${domainFolder}.${meta.className}">
-        insert into ${meta.tableNameUC} ${meta.tableAlias}
+        insert into ${meta.tableNameUC}
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <#list meta.cols as col>
             <if test="null != ${col.fieldName}">
-                ${meta.tableAlias}.${col.colName} ${col.fieldName}<#if col_index + 1 < meta.cols?size>,</#if>
+                ${col.colName}<#if col_index + 1 < meta.cols?size>,</#if>
             </if>
             </#list>
         </trim>
@@ -91,23 +78,23 @@
 
     <!-- 根据id删除（逻辑删除） -->
     <update id="deleteById">
-        update ${meta.tableNameUC} ${meta.tableAlias}
-        set ${meta.tableAlias}.status = '9'
-        where ${meta.tableAlias}.id = ${r'#{id}'}
+        update ${meta.tableNameUC}
+        set status = '9'
+        where id = ${r'#{id}'}
     </update>
 
 
     <!-- update -->
     <update id="update">
-        update ${meta.tableNameUC} ${meta.tableAlias}
+        update ${meta.tableNameUC}
         <set>
             <#list meta.cols as col>
             <if test="null != ${col.fieldName}">
-                ${meta.tableAlias}.${col.colName} = ${r'#{' + col.fieldName + '}'}<#if col_index + 1 < meta.cols?size>,</#if>
+                ${col.colName} = ${r'#{' + col.fieldName + '}'}<#if col_index + 1 < meta.cols?size>,</#if>
             </if>
             </#list>
         </set>
-        where ${meta.tableAlias}.id = ${r'#{id}'}
+        where id = ${r'#{id}'}
     </update>
 
 </mapper>

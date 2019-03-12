@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import java.util.List;
 import com.github.pagehelper.PageHelper;
+import java.util.Date;
 import ${pkgName}.${meta.module}.${mapperFolder}.${meta.className}${MapperSuffix};
 import ${pkgName}.${meta.module}.${domainFolder}.${meta.className};
 
@@ -35,11 +36,11 @@ public class ${meta.className}${ServiceSuffix}{
      */
     public void create(${meta.className} ${meta.firstLowerClassName}) {
         Assert.notNull(${meta.firstLowerClassName}, "${meta.firstLowerClassName}不能为null！");
-            if (null == ${meta.firstLowerClassName}.getId()) {
-                ${meta.firstLowerClassName}${MapperSuffix}.create(${meta.firstLowerClassName});
-            } else {
-                ${meta.firstLowerClassName}${MapperSuffix}.update(${meta.firstLowerClassName});
-            }
+        ${meta.firstLowerClassName}.setStatus("1");
+        ${meta.firstLowerClassName}.setCreateTime(new Date());
+        ${meta.firstLowerClassName}.setUpdateTime(new Date());
+        ${meta.firstLowerClassName}${MapperSuffix}.create(${meta.firstLowerClassName});
+
     }
 
     /**

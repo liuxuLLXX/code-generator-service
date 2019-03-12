@@ -3,6 +3,7 @@ package net.vtstar.generate.spring;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +22,7 @@ public class FreemarkerConfig {
      * @return freemarker configuration
      */
     @Bean
+    @Primary
     public Configuration conf() throws TemplateException, IOException {
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_23);
         cfg.setClassForTemplateLoading(FreemarkerConfig.class, "\\ftl");

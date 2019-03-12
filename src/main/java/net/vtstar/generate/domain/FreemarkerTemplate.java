@@ -1,24 +1,19 @@
 package net.vtstar.generate.domain;
 
 import freemarker.template.Template;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
-/**
- * 生成java类文件的相关模板。<br />
- * Created by qiujingde on 2016/12/5。
- */
+@ApiModel("生成java类文件的相关模板")
 public class FreemarkerTemplate {
 
-    /**
-     *
-     */
+    @ApiModelProperty(notes = "模板")
     private Template template;
-    /**
-     *
-     */
+
+    @ApiModelProperty(notes = "包名的一部分")
     private String pkg;
-    /**
-     *
-     */
+
+    @ApiModelProperty(notes = "名称后缀")
     private String suffix = "";
 
     public Template getTemplate() {

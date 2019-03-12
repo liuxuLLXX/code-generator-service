@@ -1,24 +1,16 @@
 package net.vtstar.generate.service;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-
 import lombok.extern.slf4j.Slf4j;
 import net.vtstar.generate.domain.*;
 import net.vtstar.generate.utils.ConstantsUtils;
 import org.springframework.stereotype.Service;
+import net.vtstar.generate.utils.DataSourceUtils;
+
+import java.sql.*;
+import java.util.*;
 
 
 /**
- * 
  * @author henry
  */
 @Slf4j
@@ -26,46 +18,57 @@ import org.springframework.stereotype.Service;
 public class MetaService {
     /**
      * 获取所有表。
+     *
      * @param genConfig 生成配置
+     * @return 所有的表。
      * @throws InstantiationException 实例化异常。
      * @throws IllegalAccessException 非法的访问级别。
      * @throws ClassNotFoundException 找不到类。
-     * @throws SQLException sql异常。
-     * @return 所有的表。
+     * @throws SQLException           sql异常。
      */
-    public MetaContext getTables(GeneratorConfig genConfig)
-            throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+    public MetaContext getTables(GeneratorConfig genConfig) throws ClassNotFoundException, SQLException {
         log.debug("begin connect database....");
         Class.forName(genConfig.getJdbcDriverName());
         MetaContext context = new MetaContext();
         try (Connection conn = getConnection(genConfig)) {
             DatabaseMetaData dm = conn.getMetaData();
-            System.out.println("数据库供应商用于 'schema' 的首选术语: "+ dm.getSchemaTerm());
-            System.out.println("数据库URL: " + dm.getURL());
-            //oracle库是获取注解 yyzh
-           /* if (!genConfig.getJdbcDriverName().equals("com.mysql.jdbc.Driver")) {
-                ((OracleConnection)conn).setRemarksReporting(true);
-            }*/
-            ResultSet rs = dm.getTables(null, null, null, new String[]{"TABLE"});
-            while (rs.next()) {
-                System.out.println("表名：" + rs.getString(3));
-            }
-            getAllTableInfo(dm, genConfig.getJdbcSchema(), context);
+            getAllTableInfo(dm, DataSourceUtils.getDataBaseName(genConfig.getJdbcDriverUrl()), genConfig.getJdbcSchema(), context);
         }
-        resolveFks(context);
 
-        context.getTables().forEach(t -> t.setBizTable(t.getCol("IS_DELETE_") != null));
+        resolveFks(context);
+        //context.getTables().forEach(t -> t.setBizTable(t.getCol("IS_DELETE_") != null));
 
         return context;
     }
 
     /**
      * 获取数据库连接。
+     *
      * @param genConfig 生成配置。
      * @return 数据库连接。
      * @throws SQLException sql异常。
      */
     private Connection getConnection(GeneratorConfig genConfig) throws SQLException {
+
+        /*DataSourceProperties properties = new DataSourceProperties();
+
+         *//* props.setProperty("user", genConfig.getJdbcUserName());
+            props.setProperty("password", genConfig.getJdbcPassword());
+            // 设置可以获取remarks信息
+            props.setProperty("remarks", "true");
+            // 设置可以获取tables remarks信息
+            props.setProperty("useInformationSchema", "true");*//*
+
+        properties.setDriverClassName(genConfig.getJdbcDriverName());
+        properties.setUrl(genConfig.getJdbcDriverUrl());
+        properties.setUsername(genConfig.getJdbcUserName());
+        properties.setPassword(genConfig.getJdbcPassword());
+        DataSource dataSource = properties.initializeDataSourceBuilder()
+                .type(properties.getType())
+                .build();
+
+        Connection conn = dataSource.getConnection();
+        return conn;*/
         Connection conn;
         if (genConfig.getJdbcDriverName().equals("com.mysql.cj.jdbc.Driver")) {
             Properties props = new Properties();
@@ -87,23 +90,30 @@ public class MetaService {
 
     /**
      * 获取表信息。
+     *
      * @param dm           dm
      * @param schema       schema
+     * @param dataBaseName dataBaseName 数据库名
      * @param context      context
      * @throws SQLException sql exception
      */
-    private void getAllTableInfo(DatabaseMetaData dm, String schema, MetaContext context)
+    private void getAllTableInfo(DatabaseMetaData dm, String dataBaseName, String schema, MetaContext context)
             throws SQLException {
         log.debug("begin parse database....");
-        ResultSet rs = dm.getTables(null, schema, null, new String[] {"TABLE"});
+        /**
+         * catalog: 目录（数据库名）
+         * schema:
+         * tableNamePattern:
+         */
+        ResultSet rs = dm.getTables(dataBaseName, schema, null, new String[]{"TABLE"});
         while (rs.next()) {
             Table tmd = getBaseInfoTable(rs);
 
             // 获取主键信息，仅保存主键对应的字段名，用于获取字段列表时判断字段是否为主键。
-            getRawPks(dm, tmd);
-            getCols(dm, tmd);
-            getUniqueKeys(dm, tmd);
-            getRawFks(dm, tmd);
+            getRawPks(dm, dataBaseName, tmd);
+            getCols(dm, dataBaseName, tmd);
+            getUniqueKeys(dm, dataBaseName, tmd);
+            getRawFks(dm, dataBaseName, tmd);
 
             context.addTable(tmd);
         }
@@ -113,22 +123,24 @@ public class MetaService {
     /**
      * 解析外键中的主表信息。
      * 注意：原外键信息是按照主表解析。
+     *
      * @param context 上下文
      */
     private void resolveFks(MetaContext context) {
         context.getTables()
                 .forEach(table -> table.getRawFks()
-                .forEach(fk -> {
-                    Table fkTable = context.getTable(fk.getFkTableName());
-                    fk.setFkColumn(fkTable.getCol(fk.getFkColumnName()));
-                    fkTable.getFks().add(fk);
-                    fk.resolveFieldName();
-                }));
+                        .forEach(fk -> {
+                            Table fkTable = context.getTable(fk.getFkTableName());
+                            fk.setFkColumn(fkTable.getCol(fk.getFkColumnName()));
+                            fkTable.getFks().add(fk);
+                            fk.resolveFieldName();
+                        }));
     }
 
     /**
      * 获取基础信息。
-     * @param rs  resultSet
+     *
+     * @param rs resultSet
      * @return Table
      * @throws SQLException sql exception
      */
@@ -138,7 +150,7 @@ public class MetaService {
 
 
         tmd.setTableName(rs.getString("TABLE_NAME"));
-        tmd.setTableDesc(rs.getString("REMARKS")==null?"":rs.getString("REMARKS"));
+        tmd.setTableDesc(rs.getString("REMARKS") == null ? "" : rs.getString("REMARKS"));
         tmd.setSchema(rs.getString("TABLE_SCHEM"));
 
         return tmd;
@@ -146,14 +158,16 @@ public class MetaService {
 
     /**
      * 获取主键信息。
-     * @param dm          dm
-     * @param table       table
+     *
+     * @param dm           dm
+     * @param dataBaseName
+     * @param table        table
      * @throws SQLException sql exception
      */
-    private void getRawPks(DatabaseMetaData dm, Table table)
+    private void getRawPks(DatabaseMetaData dm, String dataBaseName, Table table)
             throws SQLException {
         Set<String> pks = new HashSet<>();
-        ResultSet rsPK = dm.getPrimaryKeys(null, table.getSchema(), table.getTableName());
+        ResultSet rsPK = dm.getPrimaryKeys(dataBaseName, table.getSchema(), table.getTableName());
 
         while (rsPK.next()) {
             pks.add(rsPK.getString("COLUMN_NAME"));
@@ -164,13 +178,15 @@ public class MetaService {
 
     /**
      * 获取表字段。
-     * @param dm          dm
-     * @param table       table
+     *
+     * @param dm           dm
+     * @param dataBaseName
+     * @param table        table
      * @throws SQLException sql exception
      */
-    private void getCols(DatabaseMetaData dm, Table table)
+    private void getCols(DatabaseMetaData dm, String dataBaseName, Table table)
             throws SQLException {
-        ResultSet rsCol = dm.getColumns(null, table.getSchema(), table.getTableName(), null);
+        ResultSet rsCol = dm.getColumns(dataBaseName, table.getSchema(), table.getTableName(), null);
         while (rsCol.next()) {
             table.addCol(getColumn(rsCol));
         }
@@ -178,13 +194,15 @@ public class MetaService {
 
     /**
      * 获取唯一约束信息。
-     * @param dm      dm
-     * @param table   table
+     *
+     * @param dm           dm
+     * @param dataBaseName
+     * @param table        table
      * @throws SQLException sql exception
      */
-    private void getUniqueKeys(DatabaseMetaData dm, Table table)
+    private void getUniqueKeys(DatabaseMetaData dm, String dataBaseName, Table table)
             throws SQLException {
-        ResultSet rsUniKeys = dm.getIndexInfo(null, table.getSchema(), table.getTableName(), true, true);
+        ResultSet rsUniKeys = dm.getIndexInfo(dataBaseName, table.getSchema(), table.getTableName(), true, true);
         while (rsUniKeys.next()) {
             String indexName = rsUniKeys.getString("INDEX_NAME");
             if (indexName == null || "PRIMARY".equals(indexName)) {
@@ -196,13 +214,15 @@ public class MetaService {
 
     /**
      * 获取外键信息，对应主表仅保存表名，字段名信息。
+     *
      * @param dm           dm
+     * @param dataBaseName
      * @param table        table
-     * @throws SQLException  sql exception
+     * @throws SQLException sql exception
      */
-    private void getRawFks(DatabaseMetaData dm, Table table)
+    private void getRawFks(DatabaseMetaData dm, String dataBaseName, Table table)
             throws SQLException {
-        ResultSet fks = dm.getExportedKeys(null, table.getSchema(), table.getTableName());
+        ResultSet fks = dm.getExportedKeys(dataBaseName, table.getSchema(), table.getTableName());
         List<ForeignKey> rawFks = new ArrayList<>();
         while (fks.next()) {
             if (!table.getTableName().equals(fks.getString("PKTABLE_NAME"))) {
@@ -223,6 +243,7 @@ public class MetaService {
 
     /**
      * 读取当前数据，构建对应的Column实例。
+     *
      * @param rsCol 数据集
      * @return Column
      * @throws SQLException sql异常。
@@ -231,7 +252,7 @@ public class MetaService {
         Column col = new Column();
 
         col.setColName(rsCol.getString("COLUMN_NAME"));
-        col.setColDesc(rsCol.getString("REMARKS")==null?"":rsCol.getString("REMARKS"));
+        col.setColDesc(rsCol.getString("REMARKS") == null ? "" : rsCol.getString("REMARKS"));
         col.setLength(rsCol.getString("COLUMN_SIZE"));
         col.setNullable(rsCol.getString("NULLABLE"));
 
@@ -246,6 +267,7 @@ public class MetaService {
 
     /**
      * 将数据类型转换为java类型。
+     *
      * @param colType 列的数据库数据类型
      * @param digits  数据类型的长度
      * @return java类型。
@@ -278,8 +300,9 @@ public class MetaService {
 
     /**
      * entity类toString方法需要的，字段对应String.format代码。
+     *
      * @param colType 字段类型
-     * @param digits 字段长度
+     * @param digits  字段长度
      * @return format代码
      */
     private String parseFormatCode(String colType, String digits) {

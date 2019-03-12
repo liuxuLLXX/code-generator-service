@@ -9,6 +9,7 @@ import net.vtstar.generate.domain.GeneratorConfig;
 import net.vtstar.generate.domain.Table;
 import net.vtstar.generate.utils.ConstantsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -19,24 +20,17 @@ import java.io.StringWriter;
 import java.text.DateFormat;
 import java.util.*;
 
-/**
- * @author henry
- */
 @Slf4j
 @Service
 public class GeneratorService {
 
     /**
-     *
+     * 用来加载加载模板
      */
     private Configuration cfg;
-    /**
-     *
-     */
+
     private Template sqlMapTemplate;
-    /**
-     *
-     */
+
     private List<FreemarkerTemplate> templates;
 
     /**
@@ -49,6 +43,7 @@ public class GeneratorService {
         sqlMapTemplate = cfg.getTemplate("mapper_xml.ftl");
 
         templates = new ArrayList<>();
+
         // 生成domain
         FreemarkerTemplate ft1 = new FreemarkerTemplate();
         Template temp1 = cfg.getTemplate("domain.ftl");
@@ -241,7 +236,6 @@ public class GeneratorService {
      */
     private void prepareFolder(String folder) {
         File fd2 = new File(folder);
-        //noinspection ResultOfMethodCallIgnored
         fd2.mkdirs();
     }
 

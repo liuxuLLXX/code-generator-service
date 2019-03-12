@@ -1,85 +1,51 @@
 package net.vtstar.generate.domain;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import net.vtstar.generate.utils.CamelCaseUtil;
 import net.vtstar.utils.StrUtils;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-/**
- * 获得表的元素详细信息 包含表名称，和所有列。
- *
- * @author henry
- * @author qiujingde
- */
+@ApiModel("获得表的元素详细信息 包含表名称，和所有列。")
+@Data
 public class Table implements Serializable {
 
     private static final long serialVersionUID = 6343786075130346667L;
-    /**
-     * 基类已处理的字段。
-     */
-   /* private static final List<String> TYG_FIELDS =
-            Arrays.asList("isFinal", "isDelete", "crtTime", "updTime", "crtUserId", "updUserId");
-*/
-    /**
-     *
-     */
+
+    @ApiModelProperty(notes = "schema对象")
     private String schema;
 
-    /**
-     *
-     */
+    @ApiModelProperty(notes = "主键名称的set集合")
     private Set<String> rawPks;
 
-    /**
-     *
-     */
+    @ApiModelProperty(notes = "外键名称的set集合")
     private List<ForeignKey> rawFks;
 
-    /**
-     * 外键列表
-     */
+    @ApiModelProperty(notes = "外键列表")
     private List<ForeignKey> fks = new ArrayList<>();
 
-    /**
-     * 表名
-     */
+    @ApiModelProperty(notes = "表名")
     private String tableName;
 
-    /**
-     * 首字母大写的表名
-     */
+    @ApiModelProperty(notes = "首字母大写的表名")
     private String tableNameUC;
 
-    /**
-     * 表的描述
-     */
+    @ApiModelProperty(notes = "表的描述(注释)")
     private String tableDesc;
 
-    /**
-     * 模块（说明该表的主要用途，例 equipment, 设备模块）
-     */
+    @ApiModelProperty(notes = "模块（说明该表的主要用途，例 module = equipment, 表示这个表是设备模块）")
     private String module;
 
-    /**
-     * 类名
-     */
+    @ApiModelProperty(notes = "类名")
     private String className;
 
-    /**
-     * 表的别名
-     */
+    @ApiModelProperty(notes = "表的别名")
     private String tableAlias;
 
-    /**
-     * 首字母小写的类名
-     */
+    @ApiModelProperty(notes = "首字母小写的类名")
     private String firstLowerClassName;
 
 
@@ -88,23 +54,16 @@ public class Table implements Serializable {
      */
     private boolean bizTable;
 
-    /**
-     * 字段的list
-     */
+    @ApiModelProperty(notes = "表中的字段的list")
     private List<Column> cols = new ArrayList<>();
-    /**
-     *
-     */
+
+    @ApiModelProperty(notes = "主键集合")
     private List<Column> pkCols = new ArrayList<>();
 
-    /**
-     *
-     */
+    @ApiModelProperty(notes = "唯一索引")
     private Map<String, List<Column>> uniqueKeyMap = new LinkedHashMap<>();
 
-    /**
-     *
-     */
+    @ApiModelProperty(notes = "字段的map")
     private Map<String, Column> columnMap = new HashMap<>();
 
     /**
@@ -278,6 +237,7 @@ public class Table implements Serializable {
     }
 
     public Collection<List<Column>> getUniqueKeys() {
+        Collection<List<Column>> list = uniqueKeyMap.values();
         return uniqueKeyMap.values();
     }
 
