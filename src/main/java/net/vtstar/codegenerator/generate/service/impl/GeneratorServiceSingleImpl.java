@@ -4,21 +4,11 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
-import net.vtstar.codegenerator.generate.domain.Column;
 import net.vtstar.codegenerator.generate.domain.FreemarkerTemplate;
 import net.vtstar.codegenerator.generate.domain.GeneratorConfig;
 import net.vtstar.codegenerator.generate.domain.Table;
 import net.vtstar.codegenerator.generate.service.GeneratorService;
-import net.vtstar.codegenerator.record.domain.CreateColumnRecord;
-import net.vtstar.codegenerator.record.domain.CreateTableRecord;
-import net.vtstar.codegenerator.record.domain.OperateRecord;
-import net.vtstar.codegenerator.record.service.CreateColumnRecordService;
-import net.vtstar.codegenerator.record.service.CreateTableRecordService;
-import net.vtstar.codegenerator.record.service.OperateRecordService;
 import net.vtstar.codegenerator.utils.ConstantsUtils;
-import net.vtstar.codegenerator.utils.DataSourceUtils;
-import net.vtstar.user.domain.UserInfo;
-import net.vtstar.user.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -42,12 +32,7 @@ import java.util.*;
 @ConditionalOnProperty(prefix = "vtstar.generator", name = "mode", havingValue = "single")
 public class GeneratorServiceSingleImpl implements GeneratorService {
 
-    @Autowired
-    private OperateRecordService operateRecordService;
-    @Autowired
-    private CreateTableRecordService createTableRecordService;
-    @Autowired
-    private CreateColumnRecordService createColumnRecordService;
+
     /**
      * 用来加载加载模板
      */
