@@ -3,15 +3,15 @@ package net.vtstar.codegenerator.generate.service;
 import lombok.extern.slf4j.Slf4j;
 import net.vtstar.codegenerator.generate.domain.*;
 import net.vtstar.codegenerator.utils.ConstantsUtils;
-import org.springframework.stereotype.Service;
 import net.vtstar.codegenerator.utils.DataSourceUtils;
+import org.springframework.stereotype.Service;
 
 import java.sql.*;
 import java.util.*;
 
 
 /**
- * @author henry
+ * @author ray
  */
 @Slf4j
 @Service
@@ -31,7 +31,7 @@ public class MetaService {
         Class.forName(genConfig.getJdbcDriverName());
         MetaContext context = new MetaContext();
         Connection conn = null;
-        try  {
+        try {
             conn = getConnection(genConfig);
             DatabaseMetaData dm = conn.getMetaData();
             getAllTableInfo(dm, DataSourceUtils.getDataBaseName(genConfig.getJdbcDriverUrl()), genConfig.getJdbcSchema(), context);
@@ -41,7 +41,6 @@ public class MetaService {
             conn.close();
         }
 
-        //context.getTables().forEach(t -> t.setBizTable(t.getCol("IS_DELETE_") != null));
         resolveFks(context);
 
         return context;
@@ -76,7 +75,7 @@ public class MetaService {
         Connection conn = dataSource.getConnection();
         return conn;*/
         Connection conn;
-        if (genConfig.getJdbcDriverName().equals("com.mysql.cj.jdbc.Driver")) {
+        if (genConfig.getJdbcDriverName().equals(ConstantsUtils.JDBC_DRIVER_URL)) {
             Properties props = new Properties();
 
             props.setProperty("user", genConfig.getJdbcUserName());
@@ -231,16 +230,16 @@ public class MetaService {
         ResultSet fks = dm.getExportedKeys(dataBaseName, table.getSchema(), table.getTableName());
         List<ForeignKey> rawFks = new ArrayList<>();
         while (fks.next()) {
-            if (!table.getTableName().equals(fks.getString("PKTABLE_NAME"))) {
+            if (!table.getTableName().equals(fks.getString(ConstantsUtils.PKTABLE_NAME))) {
                 log.info("表信息不对应！");
                 continue;
             }
 
             ForeignKey fk = new ForeignKey();
 
-            fk.setPkColumn(table.getCol(fks.getString("PKCOLUMN_NAME")));
-            fk.setFkTableName(fks.getString("FKTABLE_NAME"));
-            fk.setFkColumnName(fks.getString("FKCOLUMN_NAME"));
+            fk.setPkColumn(table.getCol(fks.getString(ConstantsUtils.PKCOLUMN_NAME)));
+            fk.setFkTableName(fks.getString(ConstantsUtils.FKTABLE_NAME));
+            fk.setFkColumnName(fks.getString(ConstantsUtils.FKCOLUMN_NAME));
 
             rawFks.add(fk);
         }
@@ -257,15 +256,15 @@ public class MetaService {
     private Column getColumn(ResultSet rsCol) throws SQLException {
         Column col = new Column();
 
-        col.setColName(rsCol.getString("COLUMN_NAME"));
-        col.setColDesc(rsCol.getString("REMARKS") == null ? "" : rsCol.getString("REMARKS"));
-        col.setLength(rsCol.getString("COLUMN_SIZE"));
-        col.setNullable(rsCol.getString("NULLABLE"));
+        col.setColName(rsCol.getString(ConstantsUtils.COLUMN_NAME));
+        col.setColDesc(rsCol.getString(ConstantsUtils.REMARKS) == null ? "" : rsCol.getString(ConstantsUtils.REMARKS));
+        col.setLength(rsCol.getString(ConstantsUtils.COLUMN_SIZE));
+        col.setNullable(rsCol.getString(ConstantsUtils.NULLABLE));
 
         String colType = rsCol.getString("TYPE_NAME");
         String digits = rsCol.getString("DECIMAL_DIGITS");
         String ct = parseDataType(colType, digits);
-        col.setColType(ct);
+        col.setColType(colType);
         col.setJavaType("TIMESTAMP".equals(colType) ? "Date" : ct);
         col.setFormatCode(parseFormatCode(colType, digits));
         return col;

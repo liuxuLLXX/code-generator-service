@@ -20,7 +20,7 @@ import java.util.Set;
  * @Date: 2019/2/21
  * @Description:
  */
-@Api
+@Api(description = "代码生成模块")
 @RestController
 @RequestMapping("/api/generator")
 public class GenerateController {

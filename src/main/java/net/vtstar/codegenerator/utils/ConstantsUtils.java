@@ -41,6 +41,30 @@ public class ConstantsUtils {
 
     public static final String TENANT_DEFAULT = "default";
 
+    public static final String JDBC_DRIVER_URL = "com.mysql.cj.jdbc.Driver";
+
+    public static final String COLUMN_NAME = "COLUMN_NAME";
+
+    public static final String REMARKS = "REMARKS";
+
+    public static final String COLUMN_SIZE = "COLUMN_SIZE";
+
+    public static final String NULLABLE = "NULLABLE";
+
+    public static final String TYPE_NAME = "TYPE_NAME";
+
+    public static final String DECIMAL_DIGITS = "DECIMAL_DIGITS";
+
+    public static final String PKTABLE_NAME = "PKTABLE_NAME";
+
+    public static final String PKCOLUMN_NAME = "PKCOLUMN_NAME";
+
+    public static final String FKTABLE_NAME = "FKTABLE_NAME";
+
+    public static final String FKCOLUMN_NAME = "FKCOLUMN_NAME";
+
+
+
 
 
 }

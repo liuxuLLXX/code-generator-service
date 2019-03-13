@@ -27,7 +27,7 @@ import net.vtstar.utils.domain.Return;
 
 @Profile("pro")
 @Slf4j
-@Api(description = "操作记录")
+@Api(description = "操作记录模块")
 @RestController
 @RequestMapping("/api/operate")
 public class OperateRecordController {
