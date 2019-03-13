@@ -30,13 +30,19 @@ public class MetaService {
         log.debug("begin connect database....");
         Class.forName(genConfig.getJdbcDriverName());
         MetaContext context = new MetaContext();
-        try (Connection conn = getConnection(genConfig)) {
+        Connection conn = null;
+        try  {
+            conn = getConnection(genConfig);
             DatabaseMetaData dm = conn.getMetaData();
             getAllTableInfo(dm, DataSourceUtils.getDataBaseName(genConfig.getJdbcDriverUrl()), genConfig.getJdbcSchema(), context);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            conn.close();
         }
 
-        resolveFks(context);
         //context.getTables().forEach(t -> t.setBizTable(t.getCol("IS_DELETE_") != null));
+        resolveFks(context);
 
         return context;
     }

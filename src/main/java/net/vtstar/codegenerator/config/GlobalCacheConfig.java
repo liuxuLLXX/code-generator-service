@@ -1,4 +1,4 @@
-package net.vtstar.codegenerator.generate.config;
+package net.vtstar.codegenerator.config;
 
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
