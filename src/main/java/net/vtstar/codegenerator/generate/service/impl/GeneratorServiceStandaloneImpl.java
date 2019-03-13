@@ -10,9 +10,8 @@ import net.vtstar.codegenerator.generate.domain.Table;
 import net.vtstar.codegenerator.generate.service.GeneratorService;
 import net.vtstar.codegenerator.utils.ConstantsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -27,11 +26,10 @@ import java.util.*;
  * @Date: 2019/3/13
  * @Description:
  */
+@Profile("!pro")
 @Slf4j
 @Service
-@ConditionalOnProperty(prefix = "vtstar.generator", name = "mode", havingValue = "single")
-public class GeneratorServiceSingleImpl implements GeneratorService {
-
+public class GeneratorServiceStandaloneImpl implements GeneratorService {
 
     /**
      * 用来加载加载模板
@@ -95,13 +93,12 @@ public class GeneratorServiceSingleImpl implements GeneratorService {
      * @throws TemplateException 抛出的freemarker异常
      */
     @Override
-    @Transactional
     public void doGenerator(GeneratorConfig conf, List<Table> choseTables) throws IOException, TemplateException {
         for (Table table : choseTables) {
             log.info("Start generating files of table " + table.getTableName() + ".........");
             Map<String, Object> context = buildContext(conf, table);
             // 生成sqlmap
-            createSqlmapper(conf, context, sqlMapTemplate);
+            createSqlMapper(conf, context, sqlMapTemplate);
 
             // 生成java
             for (FreemarkerTemplate ft : templates) {
@@ -149,7 +146,7 @@ public class GeneratorServiceSingleImpl implements GeneratorService {
      * @throws IOException       io异常
      * @throws TemplateException freemarker异常
      */
-    private void createSqlmapper(GeneratorConfig conf, Map<String, Object> context, Template template)
+    private void createSqlMapper(GeneratorConfig conf, Map<String, Object> context, Template template)
             throws IOException, TemplateException {
 
         Table tm = (Table) context.get("meta");

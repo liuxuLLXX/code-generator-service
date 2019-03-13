@@ -14,7 +14,7 @@ import java.util.*;
  * @author henry
  */
 @Slf4j
-@Service("MetaService")
+@Service
 public class MetaService {
     /**
      * 获取所有表。

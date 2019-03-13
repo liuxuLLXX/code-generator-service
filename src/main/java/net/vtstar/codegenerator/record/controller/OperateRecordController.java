@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import net.vtstar.codegenerator.record.domain.OperateRecord;
 import net.vtstar.codegenerator.record.service.OperateRecordService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ import net.vtstar.utils.domain.Return;
  * @Description: 操作记录 Controller
  */
 
+@Profile("pro")
 @Slf4j
 @Api(description = "操作记录")
 @RestController

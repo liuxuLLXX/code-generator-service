@@ -3,6 +3,7 @@ package net.vtstar.codegenerator.record.service;
 import lombok.extern.slf4j.Slf4j;
 import net.vtstar.codegenerator.record.domain.CreateColumnRecord;
 import net.vtstar.codegenerator.record.mapper.CreateColumnRecordMapper;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -15,6 +16,7 @@ import java.util.Date;
  * @author liuxu
  * @Description:
  */
+@Profile("pro")
 @Slf4j
 @Service
 public class CreateColumnRecordService{

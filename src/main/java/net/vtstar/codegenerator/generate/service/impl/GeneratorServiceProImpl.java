@@ -19,7 +19,7 @@ import net.vtstar.codegenerator.utils.DataSourceUtils;
 import net.vtstar.user.domain.UserInfo;
 import net.vtstar.user.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,9 +36,9 @@ import java.util.*;
  * @Date: 2019/3/13
  * @Description:
  */
+@Profile("pro")
 @Slf4j
 @Service
-@ConditionalOnProperty(prefix = "vtstar.generator", name = "mode", havingValue = "pro")
 public class GeneratorServiceProImpl implements GeneratorService {
 
     @Autowired
