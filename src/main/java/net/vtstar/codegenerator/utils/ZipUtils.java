@@ -140,8 +140,8 @@ public final class ZipUtils {
     }
 
     public static boolean deletefile(String delpath) throws Exception {
+        log.info("delpath ------>" + delpath);
         try {
-
             File file = new File(delpath);
             // 当且仅当此抽象路径名表示的文件存在且 是一个目录时，返回 true
             if (!file.isDirectory()) {

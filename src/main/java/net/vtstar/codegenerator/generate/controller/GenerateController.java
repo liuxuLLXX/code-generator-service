@@ -1,6 +1,7 @@
 package net.vtstar.codegenerator.generate.controller;
 
 import io.swagger.annotations.Api;
+import lombok.extern.slf4j.Slf4j;
 import net.vtstar.codegenerator.generate.domain.GenVo;
 import net.vtstar.codegenerator.generate.domain.GeneratorConfig;
 import net.vtstar.codegenerator.generate.domain.Table;
@@ -30,6 +31,7 @@ import java.util.Set;
  * @Date: 2019/2/21
  * @Description:
  */
+@Slf4j
 @Api(description = "代码生成模块")
 @RestController
 @RequestMapping("/api/generator")
@@ -71,6 +73,8 @@ public class GenerateController {
             OutputStream out = response.getOutputStream();
             StreamUtils.copy(in, out);
         }
-        ZipUtils.deletefile(generatorProperties.getGenenratorPath()+ "/" + UserUtil.getUsername());
+        if (ZipUtils.deletefile(generatorProperties.getGenenratorPath()+ "/" + UserUtil.getUsername())) {
+            log.info("delete  file success");
+        }
     }
 }
