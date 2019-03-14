@@ -72,5 +72,6 @@ public class GenerateController {
             OutputStream out = response.getOutputStream();
             StreamUtils.copy(in, out);
         }
+        ZipUtils.deletefile(generatorProperties.getGenenratorPath()+ "\\" + UserUtil.getUsername());
     }
 }

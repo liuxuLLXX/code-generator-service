@@ -116,6 +116,7 @@ public class GeneratorServiceProImpl implements GeneratorService {
     @Override
     @Transactional
     public void doGenerator(GeneratorConfig conf, List<Table> choseTables) throws Exception {
+        log.info("generatorpath:" + generatorProperties.getGenenratorPath() + "\\" + UserUtil.getUsername() + "---------------------------------");
         for (Table table : choseTables) {
             log.info("Start generating files of table " + table.getTableName() + ".........");
             Map<String, Object> context = buildContext(conf, table);
