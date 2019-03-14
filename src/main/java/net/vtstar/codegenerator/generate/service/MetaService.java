@@ -152,12 +152,9 @@ public class MetaService {
     private Table getBaseInfoTable(ResultSet rs)
             throws SQLException {
         Table tmd = new Table();
-
-
-        tmd.setTableName(rs.getString("TABLE_NAME"));
-        tmd.setTableDesc(rs.getString("REMARKS") == null ? "" : rs.getString("REMARKS"));
-        tmd.setSchema(rs.getString("TABLE_SCHEM"));
-
+        tmd.setTableName(rs.getString(ConstantsUtils.TABLE_NAME));
+        tmd.setTableDesc(rs.getString(ConstantsUtils.REMARKS) == null ? "" : rs.getString(ConstantsUtils.REMARKS));
+        tmd.setSchema(rs.getString(ConstantsUtils.TABLE_SCHEM));
         return tmd;
     }
 
@@ -175,7 +172,7 @@ public class MetaService {
         ResultSet rsPK = dm.getPrimaryKeys(dataBaseName, table.getSchema(), table.getTableName());
 
         while (rsPK.next()) {
-            pks.add(rsPK.getString("COLUMN_NAME"));
+            pks.add(rsPK.getString(ConstantsUtils.COLUMN_NAME));
         }
 
         table.setRawPks(pks);
@@ -209,11 +206,11 @@ public class MetaService {
             throws SQLException {
         ResultSet rsUniKeys = dm.getIndexInfo(dataBaseName, table.getSchema(), table.getTableName(), true, true);
         while (rsUniKeys.next()) {
-            String indexName = rsUniKeys.getString("INDEX_NAME");
-            if (indexName == null || "PRIMARY".equals(indexName)) {
+            String indexName = rsUniKeys.getString(ConstantsUtils.INDEX_NAME);
+            if (indexName == null || ConstantsUtils.PRIMARY.equals(indexName)) {
                 continue;
             }
-            table.addUniqueKey(indexName, rsUniKeys.getString("COLUMN_NAME"));
+            table.addUniqueKey(indexName, rsUniKeys.getString(ConstantsUtils.COLUMN_NAME));
         }
     }
 
@@ -261,8 +258,8 @@ public class MetaService {
         col.setLength(rsCol.getString(ConstantsUtils.COLUMN_SIZE));
         col.setNullable(rsCol.getString(ConstantsUtils.NULLABLE));
 
-        String colType = rsCol.getString("TYPE_NAME");
-        String digits = rsCol.getString("DECIMAL_DIGITS");
+        String colType = rsCol.getString(ConstantsUtils.TYPE_NAME);
+        String digits = rsCol.getString(ConstantsUtils.DECIMAL_DIGITS);
         String ct = parseDataType(colType, digits);
         col.setColType(colType);
         col.setJavaType("TIMESTAMP".equals(colType) ? "Date" : ct);

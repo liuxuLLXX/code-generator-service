@@ -5,9 +5,7 @@ import net.vtstar.codegenerator.utils.CamelCaseUtil;
 import java.io.Serializable;
 
 /**
- * 外键关系。<br />
- * Created by qiujingde on 2016/12/19.
- * @author qiujingde
+ * 外键关系。
  */
 public class ForeignKey implements Serializable {
     private static final long serialVersionUID = -8009397260222365611L;

@@ -10,6 +10,7 @@ import java.util.Set;
  * 数据库解析上下文，便于处理表关联信息。
  */
 public class MetaContext implements Serializable {
+
     private static final long serialVersionUCamelCaseUtilID = 1728685652591758021L;
 
     /**

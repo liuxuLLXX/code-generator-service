@@ -97,7 +97,7 @@ public class GeneratorServiceStandaloneImpl implements GeneratorService {
         for (Table table : choseTables) {
             log.info("Start generating files of table " + table.getTableName() + ".........");
             Map<String, Object> context = buildContext(conf, table);
-            // 生成sqlmap
+            // 生成mapper.xml
             createSqlMapper(conf, context, sqlMapTemplate);
 
             // 生成java
@@ -108,6 +108,7 @@ public class GeneratorServiceStandaloneImpl implements GeneratorService {
 
 
     }
+
     /**
      * 构建代码生成需要的上下文。
      *
@@ -138,7 +139,7 @@ public class GeneratorServiceStandaloneImpl implements GeneratorService {
     }
 
     /**
-     * 生成sqlmap文件。
+     * 生成mapper.xml文件。
      *
      * @param conf     代码生成配置
      * @param context  上下文

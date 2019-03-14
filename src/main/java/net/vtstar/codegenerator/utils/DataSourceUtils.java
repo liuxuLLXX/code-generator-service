@@ -11,7 +11,7 @@ public final class DataSourceUtils {
      * 根据传入的url得到数据库名
      *
      * @param driverUrl
-     * @return HOST
+     * @return databaseName
      */
     public static String getDataBaseName(String driverUrl) {
         String str = driverUrl.substring(13);

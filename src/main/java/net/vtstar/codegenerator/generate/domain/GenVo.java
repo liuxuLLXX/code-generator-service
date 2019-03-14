@@ -10,7 +10,7 @@ import java.util.List;
  * @Date: 2019/2/21
  * @Description:
  */
-@ApiModel()
+@ApiModel
 @Data
 public class GenVo {
 
