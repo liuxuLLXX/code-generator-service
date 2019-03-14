@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Profile;
 
 
 @Profile("pro")
-@ConfigurationProperties(prefix = "genenrator")
+@ConfigurationProperties(prefix = "generator")
 public class GeneratorProperties {
 
     @Getter
