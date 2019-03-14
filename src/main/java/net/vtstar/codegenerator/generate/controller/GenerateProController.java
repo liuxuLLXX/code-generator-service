@@ -13,6 +13,7 @@ import net.vtstar.codegenerator.utils.ZipUtils;
 import net.vtstar.user.util.UserUtil;
 import net.vtstar.utils.domain.Return;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,11 +32,12 @@ import java.util.Set;
  * @Date: 2019/2/21
  * @Description:
  */
+@Profile("pro")
 @Slf4j
 @Api(description = "代码生成模块")
 @RestController
 @RequestMapping("/api/generator")
-public class GenerateController {
+public class GenerateProController {
 
     @Autowired
     private MetaService metaService;
@@ -48,12 +50,6 @@ public class GenerateController {
     private Return allTables(@RequestBody GeneratorConfig config) throws Exception {
         Set<Table> tables = metaService.getTables(config).getTables();
         return Return.success(tables);
-    }
-
-    @PostMapping("/createCodeStandalone")
-    public Return createCodeStandalone(@RequestBody GenVo genVo) throws Exception {
-        generatorService.doGenerator(genVo.getConfig(), genVo.getTables());
-        return Return.success();
     }
 
     @PostMapping("/createCodePro")
