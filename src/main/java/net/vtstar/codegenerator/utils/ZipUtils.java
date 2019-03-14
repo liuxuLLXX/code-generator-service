@@ -140,6 +140,7 @@ public final class ZipUtils {
     }
 
     public static boolean deletefile(String delpath) throws Exception {
+        String separator = System.getProperty("file.separator");
         log.info("delpath ------>" + delpath);
         try {
             File file = new File(delpath);
@@ -149,12 +150,12 @@ public final class ZipUtils {
             } else if (file.isDirectory()) {
                 String[] filelist = file.list();
                 for (int i = 0; i < filelist.length; i++) {
-                    File delfile = new File(delpath + "\\" + filelist[i]);
+                    File delfile = new File(delpath + separator + filelist[i]);
                     if (!delfile.isDirectory()) {
                         delfile.delete();
                         log.info(delfile.getAbsolutePath() + "删除文件成功");
                     } else if (delfile.isDirectory()) {
-                        deletefile(delpath + "\\" + filelist[i]);
+                        deletefile(delpath + separator + filelist[i]);
                     }
                 }
                 log.info(file.getAbsolutePath() + "删除成功");
