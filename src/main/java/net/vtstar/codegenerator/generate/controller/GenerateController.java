@@ -59,8 +59,8 @@ public class GenerateController {
         generatorService.doGenerator(genVo.getConfig(), genVo.getTables());
 
         //将生成的zip 以流的形式发送给前端
-        String filename = java.net.URLEncoder.encode(ConstantsUtils.FILE_NAME, "UTF-8").replaceAll("\\+", "%20");
-        String path = generatorProperties.getGenenratorPath() + "\\"+ UserUtil.getUsername() + "\\" + filename;
+        String filename = java.net.URLEncoder.encode(ConstantsUtils.FILE_NAME, "UTF-8").replaceAll("/+", "%20");
+        String path = generatorProperties.getGenenratorPath() + "/"+ UserUtil.getUsername() + "/" + filename;
         File file = new File(path);
         if (file.exists()) {
             response.setCharacterEncoding("UTF-8");
@@ -71,6 +71,6 @@ public class GenerateController {
             OutputStream out = response.getOutputStream();
             StreamUtils.copy(in, out);
         }
-        ZipUtils.deletefile(generatorProperties.getGenenratorPath()+ "\\" + UserUtil.getUsername());
+        ZipUtils.deletefile(generatorProperties.getGenenratorPath()+ "/" + UserUtil.getUsername());
     }
 }

@@ -17,6 +17,7 @@ import net.vtstar.codegenerator.record.service.CreateTableRecordService;
 import net.vtstar.codegenerator.record.service.OperateRecordService;
 import net.vtstar.codegenerator.utils.ConstantsUtils;
 import net.vtstar.codegenerator.utils.DataSourceUtils;
+import net.vtstar.codegenerator.utils.FilePathUtils;
 import net.vtstar.codegenerator.utils.ZipUtils;
 import net.vtstar.user.domain.UserInfo;
 import net.vtstar.user.util.UserUtil;
@@ -116,7 +117,7 @@ public class GeneratorServiceProImpl implements GeneratorService {
     @Override
     @Transactional
     public void doGenerator(GeneratorConfig conf, List<Table> choseTables) throws Exception {
-        log.info("generatorpath:" + generatorProperties.getGenenratorPath() + "\\" + UserUtil.getUsername() + "---------------------------------");
+        log.info("generatorpath:" + generatorProperties.getGenenratorPath() + "/" + UserUtil.getUsername() + "---------------------------------");
         for (Table table : choseTables) {
             log.info("Start generating files of table " + table.getTableName() + ".........");
             Map<String, Object> context = buildContext(conf, table);
@@ -129,7 +130,7 @@ public class GeneratorServiceProImpl implements GeneratorService {
             }
         }
 
-        ZipUtils.createZip(generatorProperties.getGenenratorPath() + "\\" + UserUtil.getUsername() + "\\" + (conf.getPackageName()).replaceAll("\\.", "\\\\") + "\\", generatorProperties.getGenenratorPath() + "\\" + UserUtil.getUsername() + "\\code.zip", true);
+        ZipUtils.createZip(generatorProperties.getGenenratorPath() + "/" + UserUtil.getUsername() + "/" + (conf.getPackageName()).replaceAll("/.", "////") + "/", generatorProperties.getGenenratorPath() + "\\" + UserUtil.getUsername() + "\\code.zip", true);
         record(conf, choseTables);
 
     }
@@ -207,7 +208,10 @@ public class GeneratorServiceProImpl implements GeneratorService {
 
         Table tm = (Table) context.get("meta");
         String sqlMapFolder = generatorProperties.getGenenratorPath() + "\\" + UserUtil.getUsername() + "\\" + (conf.getPackageName() + "." + tm.getModule() + "."
-                + "\\mybatis").replaceAll("\\.", "\\\\") + "\\";
+                + "mybatis").replaceAll("\\.", "\\\\") + "\\";
+
+        sqlMapFolder = FilePathUtils.getRealFilePath(sqlMapFolder);
+        log.info("mapper.xml path now ------->" + sqlMapFolder);
         prepareFolder(sqlMapFolder);
 
         String sqlMapFilePath = sqlMapFolder + "\\" + tm.getClassName() + ConstantsUtils.MAPPER_SUFFIX + ".xml";
@@ -230,6 +234,9 @@ public class GeneratorServiceProImpl implements GeneratorService {
 
         String classFolder = generatorProperties.getGenenratorPath() + "\\" + UserUtil.getUsername() + "\\" + (conf.getPackageName() + "." + tm.getModule() + "."
                 + temp.getPkg()).replaceAll("\\.", "\\\\") + "\\";
+
+        classFolder = FilePathUtils.getRealFilePath(classFolder);
+        log.info("mapper.xml path now ------->" + classFolder);
         prepareFolder(classFolder);
 
         String classFilePath = classFolder + tm.getClassName() + temp.getSuffix() + ".java";
