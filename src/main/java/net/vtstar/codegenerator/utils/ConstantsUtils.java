@@ -63,8 +63,6 @@ public class ConstantsUtils {
 
     public static final String FKCOLUMN_NAME = "FKCOLUMN_NAME";
 
-
-
-
+    public static final String FILE_NAME = "code.zip";
 
 }

@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.vtstar.codegenerator.generate.domain.FreemarkerTemplate;
 import net.vtstar.codegenerator.generate.domain.GeneratorConfig;
 import net.vtstar.codegenerator.generate.domain.Table;
+import net.vtstar.codegenerator.generate.file.properties.GeneratorProperties;
 import net.vtstar.codegenerator.generate.service.GeneratorService;
 import net.vtstar.codegenerator.record.domain.CreateColumnRecord;
 import net.vtstar.codegenerator.record.domain.CreateTableRecord;
@@ -16,6 +17,7 @@ import net.vtstar.codegenerator.record.service.CreateTableRecordService;
 import net.vtstar.codegenerator.record.service.OperateRecordService;
 import net.vtstar.codegenerator.utils.ConstantsUtils;
 import net.vtstar.codegenerator.utils.DataSourceUtils;
+import net.vtstar.codegenerator.utils.ZipUtils;
 import net.vtstar.user.domain.UserInfo;
 import net.vtstar.user.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,9 @@ public class GeneratorServiceProImpl implements GeneratorService {
     private CreateTableRecordService createTableRecordService;
     @Autowired
     private CreateColumnRecordService createColumnRecordService;
+    @Autowired
+    private GeneratorProperties generatorProperties;
+
     /**
      * 用来加载加载模板
      */
@@ -110,7 +115,7 @@ public class GeneratorServiceProImpl implements GeneratorService {
      */
     @Override
     @Transactional
-    public void doGenerator(GeneratorConfig conf, List<Table> choseTables) throws IOException, TemplateException {
+    public void doGenerator(GeneratorConfig conf, List<Table> choseTables) throws Exception {
         for (Table table : choseTables) {
             log.info("Start generating files of table " + table.getTableName() + ".........");
             Map<String, Object> context = buildContext(conf, table);
@@ -123,6 +128,7 @@ public class GeneratorServiceProImpl implements GeneratorService {
             }
         }
 
+        ZipUtils.createZip(generatorProperties.getGenenratorPath() + "\\" + UserUtil.getUsername() + "\\" + (conf.getPackageName()).replaceAll("\\.", "\\\\") + "\\", generatorProperties.getGenenratorPath() + "\\" + UserUtil.getUsername() + "\\code.zip", true);
         record(conf, choseTables);
 
     }
@@ -199,7 +205,7 @@ public class GeneratorServiceProImpl implements GeneratorService {
             throws IOException, TemplateException {
 
         Table tm = (Table) context.get("meta");
-        String sqlMapFolder = conf.getOutPath() + (conf.getPackageName() + "." + tm.getModule() + "."
+        String sqlMapFolder = generatorProperties.getGenenratorPath() + "\\" + UserUtil.getUsername() + "\\" + (conf.getPackageName() + "." + tm.getModule() + "."
                 + "\\mybatis").replaceAll("\\.", "\\\\") + "\\";
         prepareFolder(sqlMapFolder);
 
@@ -207,25 +213,6 @@ public class GeneratorServiceProImpl implements GeneratorService {
         process(context, template, sqlMapFilePath);
     }
 
-    /**
-     * 生成jsp文件。
-     *
-     * @param conf     代码生成配置
-     * @param context  上下文
-     * @param template 模板
-     * @throws IOException       io异常
-     * @throws TemplateException freemarker异常
-     */
-    private void createJsp(GeneratorConfig conf, Map<String, Object> context, Template template)
-            throws IOException, TemplateException {
-        Table tm = (Table) context.get("meta");
-
-        String jspFolder = conf.getOutPath() + "\\jsp\\" + tm.getModule();
-        prepareFolder(jspFolder);
-
-        String jspFilePath = jspFolder + "\\" + tm.getFirstLowerClassName() + "_view.jsp";
-        process(context, template, jspFilePath);
-    }
 
     /**
      * 生成java文件。
@@ -240,7 +227,7 @@ public class GeneratorServiceProImpl implements GeneratorService {
             throws IOException, TemplateException {
         Table tm = (Table) context.get("meta");
 
-        String classFolder = conf.getOutPath() + (conf.getPackageName() + "." + tm.getModule() + "."
+        String classFolder = generatorProperties.getGenenratorPath() + "\\" + UserUtil.getUsername() + "\\" + (conf.getPackageName() + "." + tm.getModule() + "."
                 + temp.getPkg()).replaceAll("\\.", "\\\\") + "\\";
         prepareFolder(classFolder);
 
