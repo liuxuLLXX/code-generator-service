@@ -129,8 +129,11 @@ public class GeneratorServiceProImpl implements GeneratorService {
                 createClass(conf, context, ft);
             }
         }
-
-        ZipUtils.createZip(generatorProperties.getGenenratorPath() + "/" + UserUtil.getUsername() + "/" + (conf.getPackageName()).replaceAll("/.", "////") + "/", generatorProperties.getGenenratorPath() + "\\" + UserUtil.getUsername() + "\\code.zip", true);
+        String sourcePath = generatorProperties.getGenenratorPath() + "\\" + UserUtil.getUsername() + "\\" + (conf.getPackageName()).replaceAll("\\.", "\\\\") + "\\";
+        sourcePath = FilePathUtils.getRealFilePath(sourcePath);
+        String zipPath = generatorProperties.getGenenratorPath() + "\\" + UserUtil.getUsername() + "\\code.zip";
+        zipPath = FilePathUtils.getRealFilePath(zipPath);
+        ZipUtils.createZip(sourcePath, zipPath, true);
         record(conf, choseTables);
 
     }
