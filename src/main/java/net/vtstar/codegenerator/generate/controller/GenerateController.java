@@ -56,7 +56,6 @@ public class GenerateController {
 
     @PostMapping("/createCodePro")
     public void createCodePro(@RequestBody GenVo genVo,  HttpServletResponse response) throws Exception {
-        ZipUtils.deletefile(generatorProperties.getGenenratorPath() + "\\" + UserUtil.getUsername());
         generatorService.doGenerator(genVo.getConfig(), genVo.getTables());
 
         //将生成的zip 以流的形式发送给前端
