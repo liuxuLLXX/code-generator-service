@@ -261,7 +261,7 @@ public class GeneratorServiceProImpl implements GeneratorService {
      * @param folder 文件夹
      */
     private void prepareFolder(String folder) {
-        log.info("begin genetaror catolog, path ---->" + folder);
+        log.info("begin generator catalog, path ---->" + folder);
         File fd2 = new File(folder);
         fd2.mkdirs();
     }
