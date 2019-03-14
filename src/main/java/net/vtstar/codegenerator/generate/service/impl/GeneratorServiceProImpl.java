@@ -114,7 +114,7 @@ public class GeneratorServiceProImpl implements GeneratorService {
         for (Table table : choseTables) {
             log.info("Start generating files of table " + table.getTableName() + ".........");
             Map<String, Object> context = buildContext(conf, table);
-            // 生成maaper.xml
+            // 生成sqlmap
             createSqlmapper(conf, context, sqlMapTemplate);
 
             // 生成java
@@ -205,6 +205,26 @@ public class GeneratorServiceProImpl implements GeneratorService {
 
         String sqlMapFilePath = sqlMapFolder + "\\" + tm.getClassName() + ConstantsUtils.MAPPER_SUFFIX + ".xml";
         process(context, template, sqlMapFilePath);
+    }
+
+    /**
+     * 生成jsp文件。
+     *
+     * @param conf     代码生成配置
+     * @param context  上下文
+     * @param template 模板
+     * @throws IOException       io异常
+     * @throws TemplateException freemarker异常
+     */
+    private void createJsp(GeneratorConfig conf, Map<String, Object> context, Template template)
+            throws IOException, TemplateException {
+        Table tm = (Table) context.get("meta");
+
+        String jspFolder = conf.getOutPath() + "\\jsp\\" + tm.getModule();
+        prepareFolder(jspFolder);
+
+        String jspFilePath = jspFolder + "\\" + tm.getFirstLowerClassName() + "_view.jsp";
+        process(context, template, jspFilePath);
     }
 
     /**

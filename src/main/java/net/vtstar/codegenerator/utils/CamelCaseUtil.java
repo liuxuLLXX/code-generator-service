@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 /**
  * 表名，字段名等的格式化工具类
+ * Created by qiujingde on 2016/12/20.
  */
 public final class CamelCaseUtil {
 

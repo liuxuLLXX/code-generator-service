@@ -39,22 +39,13 @@ public class ConstantsUtils {
     public static final String TABLE_ALIAS = "tableAlias";
 
 
-    // jdbc driver class
+    public static final String TENANT_DEFAULT = "default";
+
     public static final String JDBC_DRIVER_URL = "com.mysql.cj.jdbc.Driver";
 
-    //table attribute
-    public static final String TABLE_NAME = "TABLE_NAME";
-
-    public static final String TABLE_SCHEM = "TABLE_SCHEM";
-
-    // column attribute
     public static final String COLUMN_NAME = "COLUMN_NAME";
 
     public static final String REMARKS = "REMARKS";
-
-    public static final String PRIMARY = "PRIMARY";
-
-    public static final String INDEX_NAME = "INDEX_NAME";
 
     public static final String COLUMN_SIZE = "COLUMN_SIZE";
 
