@@ -270,7 +270,11 @@ public class GeneratorServiceProImpl implements GeneratorService {
     private void prepareFolder(String folder) {
         log.info("begin generator catalog, path ---->" + folder);
         File fd2 = new File(folder);
-        fd2.mkdirs();
+        if (!fd2.getParentFile().exists()) { //判断文件父目录是否存在
+            fd2.getParentFile().mkdir();
+        } else {
+            fd2.mkdirs();
+        }
     }
 
     @Autowired
