@@ -21,6 +21,6 @@ import org.springframework.context.annotation.Profile;
         MybatisAutoConfiguration.class,
         SecurityAutoConfiguration.class,
         UserAutoConfiguration.class})
-@MapperScan("net.vtstar.codegenerator")
+@MapperScan("net.vtstar.codegenerator.record")
 public class CustomAutoConfig {
 }

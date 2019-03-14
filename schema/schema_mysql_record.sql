@@ -4,8 +4,8 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for create_column_record
 -- ----------------------------
-DROP TABLE IF EXISTS `create_column_record`;
-CREATE TABLE `create_column_record`  (
+DROP TABLE IF EXISTS `CREATE_COLUMN_RECORD`;
+CREATE TABLE `CREATE_COLUMN_RECORD`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '序号',
   `table_id` bigint(20) NULL DEFAULT NULL COMMENT '表id',
   `column_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '字段名称',
@@ -19,8 +19,8 @@ CREATE TABLE `create_column_record`  (
 -- ----------------------------
 -- Table structure for create_table_record
 -- ----------------------------
-DROP TABLE IF EXISTS `create_table_record`;
-CREATE TABLE `create_table_record`  (
+DROP TABLE IF EXISTS `CREATE_TABLE_RECORD`;
+CREATE TABLE `CREATE_TABLE_RECORD`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '序号',
   `record_id` bigint(20) NULL DEFAULT NULL COMMENT '生成记录id',
   `table_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '表名称',
@@ -33,8 +33,8 @@ CREATE TABLE `create_table_record`  (
 -- ----------------------------
 -- Table structure for operate_record
 -- ----------------------------
-DROP TABLE IF EXISTS `operate_record`;
-CREATE TABLE `operate_record`  (
+DROP TABLE IF EXISTS `OPERATE_RECORD`;
+CREATE TABLE `OPERATE_RECORD`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '序号',
   `user_id` bigint(20) NULL DEFAULT NULL COMMENT '用户ID',
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '姓名',
