@@ -217,7 +217,7 @@ public class GeneratorServiceProImpl implements GeneratorService {
         log.info("mapper.xml path now ------->" + sqlMapFolder);
         prepareFolder(sqlMapFolder);
 
-        String sqlMapFilePath = sqlMapFolder + "\\" + tm.getClassName() + ConstantsUtils.MAPPER_SUFFIX + ".xml";
+        String sqlMapFilePath = sqlMapFolder + tm.getClassName() + ConstantsUtils.MAPPER_SUFFIX + ".xml";
         process(context, template, sqlMapFilePath);
     }
 
