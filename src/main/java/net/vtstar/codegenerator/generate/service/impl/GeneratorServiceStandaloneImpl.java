@@ -4,6 +4,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
+import net.vtstar.codegenerator.generate.advice.exception.GeneratorException;
 import net.vtstar.codegenerator.generate.domain.FreemarkerTemplate;
 import net.vtstar.codegenerator.generate.domain.GeneratorConfig;
 import net.vtstar.codegenerator.generate.domain.Table;
@@ -14,10 +15,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.StringWriter;
+import java.io.*;
 import java.text.DateFormat;
 import java.util.*;
 
@@ -93,7 +91,7 @@ public class GeneratorServiceStandaloneImpl implements GeneratorService {
      * @throws TemplateException 抛出的freemarker异常
      */
     @Override
-    public void doGenerator(GeneratorConfig conf, List<Table> choseTables) throws IOException, TemplateException {
+    public void doGenerator(GeneratorConfig conf, List<Table> choseTables) throws IOException, TemplateException, GeneratorException {
         for (Table table : choseTables) {
             log.info("Start generating files of table " + table.getTableName() + ".........");
             Map<String, Object> context = buildContext(conf, table);
@@ -147,7 +145,7 @@ public class GeneratorServiceStandaloneImpl implements GeneratorService {
      * @throws TemplateException freemarker异常
      */
     private void createSqlMapper(GeneratorConfig conf, Map<String, Object> context, Template template)
-            throws IOException, TemplateException {
+            throws IOException, TemplateException, GeneratorException {
 
         Table tm = (Table) context.get("meta");
         String sqlMapFolder = conf.getOutPath() + (conf.getPackageName() + "." + tm.getModule() + "."
@@ -169,7 +167,7 @@ public class GeneratorServiceStandaloneImpl implements GeneratorService {
      * @throws TemplateException freemarker异常
      */
     private void createClass(GeneratorConfig conf, Map<String, Object> context, FreemarkerTemplate temp)
-            throws IOException, TemplateException {
+            throws IOException, TemplateException, GeneratorException {
         Table tm = (Table) context.get("meta");
 
         String classFolder = conf.getOutPath() + (conf.getPackageName() + "." + tm.getModule() + "."
@@ -190,12 +188,14 @@ public class GeneratorServiceStandaloneImpl implements GeneratorService {
      * @throws TemplateException freemarker异常
      */
     private void process(Map<String, Object> context, Template template, String filePath)
-            throws IOException, TemplateException {
+            throws IOException, TemplateException, GeneratorException {
         try (FileOutputStream out = new FileOutputStream(filePath, false)) {
             StringWriter writer = new StringWriter();
             template.process(context, writer);
             out.write((writer.toString()).getBytes("utf-8"));
             out.flush();
+        } catch (FileNotFoundException e) {
+            throw new GeneratorException("系统找不到指定的路径, 请确保填写的输出路径在当前的操作系统中是真实存在的！");
         }
     }
 

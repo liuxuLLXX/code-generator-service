@@ -1,6 +1,7 @@
 package net.vtstar.codegenerator.generate.service;
 
 import lombok.extern.slf4j.Slf4j;
+import net.vtstar.codegenerator.generate.advice.exception.GeneratorException;
 import net.vtstar.codegenerator.generate.domain.*;
 import net.vtstar.codegenerator.utils.ConstantsUtils;
 import net.vtstar.codegenerator.utils.DataSourceUtils;
@@ -26,7 +27,7 @@ public class MetaService {
      * @throws ClassNotFoundException 找不到类。
      * @throws SQLException           sql异常。
      */
-    public MetaContext getTables(GeneratorConfig genConfig) throws ClassNotFoundException, SQLException {
+    public MetaContext getTables(GeneratorConfig genConfig) throws ClassNotFoundException, SQLException, GeneratorException {
         log.debug("begin connect database....");
         Class.forName(genConfig.getJdbcDriverName());
         MetaContext context = new MetaContext();
@@ -35,10 +36,13 @@ public class MetaService {
             conn = getConnection(genConfig);
             DatabaseMetaData dm = conn.getMetaData();
             getAllTableInfo(dm, DataSourceUtils.getDataBaseName(genConfig.getJdbcDriverUrl()), genConfig.getJdbcSchema(), context);
-        } catch (Exception e) {
-            log.error(e.getMessage());
+        } catch (SQLException sqlE) {
+            log.error(sqlE.getMessage());
+            throw new GeneratorException("数据库连接失败，请检查填写的数据库信息是否正确！");
         } finally {
-            conn.close();
+            if (null != conn) {
+                conn.close();
+            }
         }
 
         resolveFks(context);
