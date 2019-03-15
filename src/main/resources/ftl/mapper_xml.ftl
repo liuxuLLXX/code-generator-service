@@ -7,10 +7,6 @@
         <#list meta.cols as col>
             <<#if (col.pkFlag)>id<#else>result</#if> property="${col.fieldName}" column="${col.colName}" javaType="${col.javaType}"/>
         </#list>
-        <#list meta.fks as fk>
-            <association property="${fk.fieldName}" column="${fk.fkColumn.fieldName}"
-                         select="${pkgName}.${mapperFolder}.${fk.pkColumn.table.className}${MapperSuffix}.getById"/>
-        </#list>
     </resultMap>
 
     <!-- sqlColumn-->

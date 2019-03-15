@@ -19,7 +19,7 @@ public class ConstantsUtils {
 
     public static final String TYPE_INTEGER = "Integer";
 
-    public static final String TYPE_FLOAT = "float";
+    public static final String TYPE_DECIMAL = "BigDecimal";
 
 
     public static final String MAPPER_PKG = "mapper";

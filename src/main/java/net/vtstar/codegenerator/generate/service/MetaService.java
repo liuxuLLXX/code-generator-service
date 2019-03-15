@@ -120,8 +120,11 @@ public class MetaService {
 
             // 获取主键信息，仅保存主键对应的字段名，用于获取字段列表时判断字段是否为主键。
             getRawPks(dm, dataBaseName, tmd);
+            // column
             getCols(dm, dataBaseName, tmd);
+            //唯一索引
             getUniqueKeys(dm, dataBaseName, tmd);
+            //获取外键信息
             getRawFks(dm, dataBaseName, tmd);
 
             context.addTable(tmd);
@@ -290,13 +293,13 @@ public class MetaService {
         }
         if ("INT".equals(colType) || "SMALLINT".equals(colType)
                 || "TINYINT".equals(colType) || "INTEGER".equals(colType) || "NUMBER".equals(colType)) {
-            return "0".equals(digits) ? ConstantsUtils.TYPE_INTEGER : ConstantsUtils.TYPE_FLOAT;
+            return "0".equals(digits) ? ConstantsUtils.TYPE_INTEGER : ConstantsUtils.TYPE_DECIMAL;
         }
         if ("BIGINT".equals(colType)) {
             return "Long";
         }
         if ("DECIMAL".equals(colType)) {
-            return ConstantsUtils.TYPE_FLOAT;
+            return ConstantsUtils.TYPE_DECIMAL;
         }
         if ("DATETIME".equals(colType) || "TIMESTAMP(6)".equals(colType) || "DATE".equals(colType)) {
             return "java.util.Date";
