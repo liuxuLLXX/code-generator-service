@@ -1,4 +1,4 @@
-package ${pkgName}.${mapperFolder};
+package ${pkgName}.${meta.module}.${mapperFolder};
 
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;

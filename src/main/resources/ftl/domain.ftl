@@ -1,4 +1,4 @@
-package ${pkgName}.${domainFolder};
+package ${pkgName}.${meta.module}.${domainFolder};
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

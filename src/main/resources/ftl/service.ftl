@@ -1,4 +1,4 @@
-package ${pkgName}.${serviceFolder};
+package ${pkgName}.${meta.module}.${serviceFolder};
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package ${pkgName}.${controllerFolder};
+package ${pkgName}.${meta.module}.${controllerFolder};
 
 import ${pkgName}.${meta.module}.${domainFolder}.${meta.className};
 import ${pkgName}.${meta.module}.${serviceFolder}.${meta.className}${ServiceSuffix};
