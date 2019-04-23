@@ -25,7 +25,7 @@ import net.vtstar.utils.domain.Return;
 @Slf4j
 @Api(description = "${meta.tableDesc}")
 @RestController
-@RequestMapping("/api/${meta.module}")
+@RequestMapping("/api/${meta.firstLowerClassName}")
 public class ${meta.className}${ControllerSuffix} {
 
     @Autowired
