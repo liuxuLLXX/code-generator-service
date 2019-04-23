@@ -15,7 +15,7 @@ public interface ${meta.className}${MapperSuffix} {
     /**
      * 分页查询
      */
-    List<${meta.className}> getList();
+    List<${meta.className}> getList(${meta.className} ${meta.firstLowerClassName});
 
 
     /**
