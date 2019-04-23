@@ -65,4 +65,8 @@ public class ConstantsUtils {
 
     public static final String FILE_NAME = "code.zip";
 
+    public static final String DRIVER_NAME_MYSQL = "com.mysql.cj.jdbc.Driver";
+
+    public static final String DRIVER_NAME_POSTGRES = "org.postgresql.Driver";
+
 }

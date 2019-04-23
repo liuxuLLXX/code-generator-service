@@ -147,7 +147,7 @@ public class GeneratorServiceProImpl implements GeneratorService {
         operateRecord.setUserId(userInfo.getId());
         operateRecord.setHost(DataSourceUtils.getDataBaseHost(conf.getJdbcDriverUrl()));
         operateRecord.setDbUsername(conf.getJdbcUserName());
-        operateRecord.setDbName(DataSourceUtils.getDataBaseName(conf.getJdbcDriverUrl()));
+        operateRecord.setDbName(DataSourceUtils.getMysqlDataBaseName(conf.getJdbcDriverUrl()));
         operateRecord.setName(userInfo.getName());
         operateRecord.setUsername(userInfo.getUsername());
         operateRecordService.create(operateRecord);

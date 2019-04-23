@@ -35,7 +35,11 @@ public class MetaService {
         try {
             conn = getConnection(genConfig);
             DatabaseMetaData dm = conn.getMetaData();
-            getAllTableInfo(dm, DataSourceUtils.getDataBaseName(genConfig.getJdbcDriverUrl()), genConfig.getJdbcSchema(), context);
+            if(ConstantsUtils.DRIVER_NAME_MYSQL.equals(genConfig.getJdbcDriverName())) {
+                getAllTableInfo(dm, DataSourceUtils.getMysqlDataBaseName(genConfig.getJdbcDriverUrl()), genConfig.getJdbcSchema(), context);
+            } else if (ConstantsUtils.DRIVER_NAME_POSTGRES.equals(genConfig.getJdbcDriverName())) {
+                getAllTableInfo(dm, DataSourceUtils.getPostgresDataBaseName(genConfig.getJdbcDriverUrl()), genConfig.getJdbcSchema(), context);
+            }
         } catch (SQLException sqlE) {
             log.error(sqlE.getMessage());
             throw new GeneratorException("数据库连接失败，请检查填写的数据库信息是否正确！");
