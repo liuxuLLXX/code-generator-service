@@ -1,8 +1,12 @@
 package net.vtstar.codegenerator.generate.advice;
 
+import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import freemarker.core.InvalidReferenceException;
 import lombok.extern.slf4j.Slf4j;
 import net.vtstar.utils.domain.Return;
 import net.vtstar.utils.exception.KnownException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -44,6 +48,12 @@ public class GeneratorAdvice {
         } else if (ex instanceof SQLException) {
             log.warn(msg);
             return Return.failed(msg);
+        } else if (ex instanceof HttpMessageNotReadableException) {
+            log.warn(msg);
+            return Return.failed("请求JSON格式不正确");
+        } else if (ex instanceof InvalidReferenceException) {
+            log.warn(msg);
+            return Return.failed("请求json缺少参数，具体报错内容为: " + msg);
         } else {
             log.warn(msg, ex);
             return Return.failed("内部错误！");

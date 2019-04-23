@@ -145,11 +145,17 @@ public class GeneratorServiceProImpl implements GeneratorService {
         UserInfo userInfo = UserUtil.getUserInfo();
         OperateRecord operateRecord = new OperateRecord();
         operateRecord.setUserId(userInfo.getId());
-        operateRecord.setHost(DataSourceUtils.getDataBaseHost(conf.getJdbcDriverUrl()));
         operateRecord.setDbUsername(conf.getJdbcUserName());
-        operateRecord.setDbName(DataSourceUtils.getMysqlDataBaseName(conf.getJdbcDriverUrl()));
         operateRecord.setName(userInfo.getName());
         operateRecord.setUsername(userInfo.getUsername());
+
+        if (ConstantsUtils.DRIVER_NAME_MYSQL.equals(conf.getJdbcDriverName())) {
+            operateRecord.setHost(DataSourceUtils.getMysqlDataBaseHost(conf.getJdbcDriverUrl()));
+            operateRecord.setDbName(DataSourceUtils.getMysqlDataBaseName(conf.getJdbcDriverUrl()));
+        } else if (ConstantsUtils.DRIVER_NAME_POSTGRES.equals(conf.getJdbcDriverName())) {
+            operateRecord.setHost(DataSourceUtils.getPostgresDataBaseHost(conf.getJdbcDriverUrl()));
+            operateRecord.setDbName(DataSourceUtils.getMysqlDataBaseName(conf.getJdbcDriverUrl()));
+        }
         operateRecordService.create(operateRecord);
 
         choseTables.forEach(table -> {

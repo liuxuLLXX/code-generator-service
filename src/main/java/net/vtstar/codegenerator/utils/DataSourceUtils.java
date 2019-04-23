@@ -35,14 +35,20 @@ public final class DataSourceUtils {
      * @param driverUrl
      * @return HOST
      */
-    public static String getDataBaseHost(String driverUrl) {
+    public static String getMysqlDataBaseHost(String driverUrl) {
         String str = driverUrl.substring(13);
         return str.substring(0, str.indexOf(":"));
     }
 
-    public static void main(String[] args) {
-        String str = "jdbc:postgresql://node1.vtstar.osc:32345/vtcloud_dev";
-        System.out.println(getPostgresDataBaseName(str));
+    /**
+     * 根据传入的url得到数据库的地址
+     *
+     * @param driverUrl
+     * @return HOST
+     */
+    public static String getPostgresDataBaseHost(String driverUrl) {
+        String str = driverUrl.substring(18);
+        return str.substring(0, str.indexOf(":"));
     }
 
 }

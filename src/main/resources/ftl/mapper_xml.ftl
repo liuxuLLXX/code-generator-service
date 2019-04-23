@@ -12,7 +12,7 @@
     <!-- sqlColumn-->
     <sql id="SQL_${meta.tableNameUC}_COLUMN">
         <#list meta.cols as col>
-            ${meta.tableAlias}.${col.colName}<#if col_index + 1 < meta.cols?size>,</#if>
+            ${meta.tableAlias}_.${col.colName}<#if col_index + 1 < meta.cols?size>,</#if>
         </#list>
     </sql>
 
@@ -24,7 +24,7 @@
             <#else>
         <if test="null != ${col.fieldName}">
             </#if>
-            AND ${meta.tableAlias}.${col.colName} = ${r'#{' + col.fieldName + '}'}
+            AND ${meta.tableAlias}_.${col.colName} = ${r'#{' + col.fieldName + '}'}
         </if>
         </#list>
     </sql>
@@ -34,7 +34,7 @@
     <select id="getList" parameterType="${pkgName}.${meta.module}.${domainFolder}.${meta.className}" resultMap="${meta.firstLowerClassName}Map">
         select
         <include refid="SQL_${meta.tableNameUC}_COLUMN"/>
-        from ${meta.tableNameUC} ${meta.tableAlias}
+        from ${meta.tableNameUC} ${meta.tableAlias}_
         <where>
             <include refid="SQL_${meta.tableNameUC}_WHERE"/>
         </where>
@@ -44,9 +44,9 @@
     <select id="getById" resultMap="${meta.firstLowerClassName}Map">
         select
         <include refid="SQL_${meta.tableNameUC}_COLUMN"/>
-        from ${meta.tableNameUC} ${meta.tableAlias}
-        where ${meta.tableAlias}.id = ${r'#{id}'}
-        and ${meta.tableAlias}.status != '9'
+        from ${meta.tableNameUC} ${meta.tableAlias}_
+        where ${meta.tableAlias}_.id = ${r'#{id}'}
+        and ${meta.tableAlias}_.status != '9'
     </select>
 
     <#--create-->

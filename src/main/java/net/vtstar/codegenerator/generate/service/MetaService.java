@@ -35,7 +35,7 @@ public class MetaService {
         try {
             conn = getConnection(genConfig);
             DatabaseMetaData dm = conn.getMetaData();
-            if(ConstantsUtils.DRIVER_NAME_MYSQL.equals(genConfig.getJdbcDriverName())) {
+            if (ConstantsUtils.DRIVER_NAME_MYSQL.equals(genConfig.getJdbcDriverName())) {
                 getAllTableInfo(dm, DataSourceUtils.getMysqlDataBaseName(genConfig.getJdbcDriverUrl()), genConfig.getJdbcSchema(), context);
             } else if (ConstantsUtils.DRIVER_NAME_POSTGRES.equals(genConfig.getJdbcDriverName())) {
                 getAllTableInfo(dm, DataSourceUtils.getPostgresDataBaseName(genConfig.getJdbcDriverUrl()), genConfig.getJdbcSchema(), context);
