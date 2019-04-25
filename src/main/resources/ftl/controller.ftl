@@ -40,7 +40,7 @@ public class ${meta.className}${ControllerSuffix} {
     public Return pageList(@RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize){
         Assert.notNull(pageNum, "pageNum is null");
         Assert.notNull(pageSize, "pageSize is null");
-        List<${meta.className}> ${meta.firstLowerClassName}List = ${meta.firstLowerClassName}${ServiceSuffix}.pageList(pageNum,pageSize);
+        List<${meta.className}> ${meta.firstLowerClassName}List = ${meta.firstLowerClassName}${ServiceSuffix}.pageList(pageNum, pageSize);
         return Return.success(new PageInfo<>(${meta.firstLowerClassName}List));
     }
 
