@@ -37,7 +37,7 @@ public class ${meta.className}${ControllerSuffix} {
     @ApiImplicitParam(name = "pageSize", value = "页容量", dataType = "number", paramType = "query"),
     })
     @GetMapping("/page")
-    public Return pageList(@RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize){
+    private Return pageList(@RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize){
         Assert.notNull(pageNum, "pageNum is null");
         Assert.notNull(pageSize, "pageSize is null");
         List<${meta.className}> ${meta.firstLowerClassName}List = ${meta.firstLowerClassName}${ServiceSuffix}.pageList(pageNum, pageSize);
@@ -45,15 +45,15 @@ public class ${meta.className}${ControllerSuffix} {
     }
 
     @ApiOperation("新建${meta.tableDesc}")
-    @PostMapping("/create")
-    public Return create(@Valid @RequestBody ${meta.className} ${meta.firstLowerClassName}){
+    @PostMapping("/")
+    private Return create(@Valid @RequestBody ${meta.className} ${meta.firstLowerClassName}){
         ${meta.firstLowerClassName}${ServiceSuffix}.create(${meta.firstLowerClassName});
         return Return.success();
     }
 
     @ApiOperation("修改${meta.tableDesc}")
-    @PutMapping("/update")
-    public Return update(@Valid @RequestBody ${meta.className} ${meta.firstLowerClassName}){
+    @PutMapping("/")
+    private Return update(@Valid @RequestBody ${meta.className} ${meta.firstLowerClassName}){
         Assert.notNull(${meta.firstLowerClassName}.getId(), "id is null");
         ${meta.firstLowerClassName}${ServiceSuffix}.update( ${meta.firstLowerClassName});
         return Return.success();
@@ -61,7 +61,7 @@ public class ${meta.className}${ControllerSuffix} {
 
     @ApiOperation("删除${meta.tableDesc}（根据id删除单个${meta.tableDesc}）")
     @DeleteMapping("/{${meta.firstLowerClassName}Id}")
-    public Return delete(@PathVariable("${meta.firstLowerClassName}Id") Long ${meta.firstLowerClassName}Id){
+    private Return delete(@PathVariable("${meta.firstLowerClassName}Id") Long ${meta.firstLowerClassName}Id){
         Assert.notNull(${meta.firstLowerClassName}Id, "${meta.tableDesc}Id is null");
         ${meta.firstLowerClassName}Service.deleteById(${meta.firstLowerClassName}Id);
         return Return.success();
