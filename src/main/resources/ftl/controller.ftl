@@ -45,14 +45,14 @@ public class ${meta.className}${ControllerSuffix} {
     }
 
     @ApiOperation("新建${meta.tableDesc}")
-    @PostMapping("/")
+    @PostMapping
     private Return create(@Valid @RequestBody ${meta.className} ${meta.firstLowerClassName}){
         ${meta.firstLowerClassName}${ServiceSuffix}.create(${meta.firstLowerClassName});
         return Return.success();
     }
 
     @ApiOperation("修改${meta.tableDesc}")
-    @PutMapping("/")
+    @PutMapping
     private Return update(@Valid @RequestBody ${meta.className} ${meta.firstLowerClassName}){
         Assert.notNull(${meta.firstLowerClassName}.getId(), "id is null");
         ${meta.firstLowerClassName}${ServiceSuffix}.update( ${meta.firstLowerClassName});
@@ -60,8 +60,8 @@ public class ${meta.className}${ControllerSuffix} {
     }
 
     @ApiOperation("删除${meta.tableDesc}（根据id删除单个${meta.tableDesc}）")
-    @DeleteMapping("/{${meta.firstLowerClassName}Id}")
-    private Return delete(@PathVariable("${meta.firstLowerClassName}Id") Long ${meta.firstLowerClassName}Id){
+    @DeleteMapping("/{id}")
+    private Return delete(@PathVariable("id") Long Id){
         Assert.notNull(${meta.firstLowerClassName}Id, "${meta.tableDesc}Id is null");
         ${meta.firstLowerClassName}Service.deleteById(${meta.firstLowerClassName}Id);
         return Return.success();
