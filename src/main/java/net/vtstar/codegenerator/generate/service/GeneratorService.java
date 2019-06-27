@@ -1,9 +1,6 @@
 package net.vtstar.codegenerator.generate.service;
 
-import net.vtstar.codegenerator.generate.domain.GeneratorConfig;
-import net.vtstar.codegenerator.generate.domain.Table;
-
-import java.util.List;
+import net.vtstar.codegenerator.generate.domain.GenVo;
 
 /**
  * @Auther: liuxu
@@ -12,5 +9,5 @@ import java.util.List;
  */
 public interface GeneratorService {
 
-    void doGenerator(GeneratorConfig conf, List<Table> choseTables) throws Exception;
+    void doGenerator(GenVo genVo) throws Exception;
 }

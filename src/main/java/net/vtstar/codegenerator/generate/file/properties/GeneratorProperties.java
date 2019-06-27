@@ -12,6 +12,6 @@ public class GeneratorProperties {
 
     @Getter
     @Setter
-    private String genenratorPath;
+    private String genenratorpath;
 
 }

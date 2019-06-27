@@ -2,8 +2,8 @@ package net.vtstar.codegenerator.generate.controller;
 
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
+import net.vtstar.codegenerator.generate.domain.DataSourceParams;
 import net.vtstar.codegenerator.generate.domain.GenVo;
-import net.vtstar.codegenerator.generate.domain.GeneratorConfig;
 import net.vtstar.codegenerator.generate.domain.Table;
 import net.vtstar.codegenerator.generate.file.properties.GeneratorProperties;
 import net.vtstar.codegenerator.generate.service.GeneratorService;
@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.sql.SQLException;
 import java.util.Set;
 
 /**
@@ -48,30 +47,36 @@ public class GenerateProController {
     private GeneratorProperties generatorProperties;
 
     @PostMapping("/allTables")
-    private Return allTables(@RequestBody GeneratorConfig config) throws Exception {
-        Set<Table> tables = metaService.getTables(config).getTables();
+    private Return allTables(@RequestBody DataSourceParams params) throws Exception {
+        Set<Table> tables = metaService.getTables(params).getTables();
         return Return.success(tables);
     }
 
     @PostMapping("/createCodePro")
-    public void createCodePro(@RequestBody GenVo genVo,  HttpServletResponse response) throws Exception {
-        generatorService.doGenerator(genVo.getConfig(), genVo.getTables());
+    public void createCodePro(@RequestBody GenVo genVo, HttpServletResponse response) throws Exception {
+        generatorService.doGenerator(genVo);
 
         //将生成的zip 以流的形式发送给前端
         String filename = java.net.URLEncoder.encode(ConstantsUtils.FILE_NAME, "UTF-8").replaceAll("/+", "%20");
-        String path = generatorProperties.getGenenratorPath() + "/"+ UserUtil.getUsername() + "/" + filename;
+        String path = generatorProperties.getGenenratorpath() + "/" + UserUtil.getUsername() + "/" + filename;
         File file = new File(path);
-        if (file.exists()) {
-            response.setCharacterEncoding("UTF-8");
-            response.setContentType("application/force-download");
-            response.setHeader("Content-Disposition", "attachment;fileName=\"" + filename + "\";filename*=utf-8''" + filename);
-            response.setHeader("fileName", filename);
-            InputStream in = new FileInputStream(file);
-            OutputStream out = response.getOutputStream();
-            StreamUtils.copy(in, out);
+        try {
+            if (file.exists()) {
+                response.setCharacterEncoding("UTF-8");
+                response.setContentType("application/force-download");
+                response.setHeader("Content-Disposition", "attachment;fileName=\"" + filename + "\";filename*=utf-8''" + filename);
+                response.setHeader("fileName", filename);
+                InputStream in = new FileInputStream(file);
+                OutputStream out = response.getOutputStream();
+                StreamUtils.copy(in, out);
+                in.close();
+                out.close();
+            }
+        } finally {
+            if (ZipUtils.deletefile(generatorProperties.getGenenratorpath() + "/" + UserUtil.getUsername())) {
+                log.info("delete  file success");
+            }
         }
-        if (ZipUtils.deletefile(generatorProperties.getGenenratorPath()+ "/" + UserUtil.getUsername())) {
-            log.info("delete  file success");
-        }
+
     }
 }

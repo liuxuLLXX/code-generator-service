@@ -29,8 +29,6 @@ public final class ZipUtils {
         try {
             fos = new FileOutputStream(zipPath);
             zos = new ZipOutputStream(fos);
-            //  zos.setEncoding("gbk");//此处修改字节码方式。
-            //createXmlFile(sourcePath,"293.xml");
             writeZip(new File(sourcePath), "", zos, isDrop);
         } catch (FileNotFoundException e) {
             log.error("创建ZIP文件失败", e);

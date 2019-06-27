@@ -2,9 +2,10 @@ package net.vtstar.codegenerator.generate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import net.vtstar.codegenerator.generate.advice.exception.GeneratorException;
+import net.vtstar.codegenerator.generate.handler.DefaultDataHandler;
 import net.vtstar.codegenerator.generate.domain.*;
 import net.vtstar.codegenerator.utils.ConstantsUtils;
-import net.vtstar.codegenerator.utils.DataSourceUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
@@ -17,29 +18,32 @@ import java.util.*;
 @Slf4j
 @Service
 public class MetaService {
+
+    @Autowired
+    private DataHandlerChooser handlerChooser;
+
+    DefaultDataHandler dataHandler;
+
     /**
      * 获取所有表。
      *
-     * @param genConfig 生成配置
+     * @param params 生成配置
      * @return 所有的表。
      * @throws InstantiationException 实例化异常。
      * @throws IllegalAccessException 非法的访问级别。
      * @throws ClassNotFoundException 找不到类。
      * @throws SQLException           sql异常。
      */
-    public MetaContext getTables(GeneratorConfig genConfig) throws ClassNotFoundException, SQLException, GeneratorException {
+    public MetaContext getTables(DataSourceParams params) throws ClassNotFoundException, SQLException, GeneratorException {
         log.debug("begin connect database....");
-        Class.forName(genConfig.getJdbcDriverName());
+        dataHandler = handlerChooser.choose(params.getJdbcDriverName());
+        Class.forName(params.getJdbcDriverName());
         MetaContext context = new MetaContext();
         Connection conn = null;
         try {
-            conn = getConnection(genConfig);
+            conn = getConnection(params);
             DatabaseMetaData dm = conn.getMetaData();
-            if (ConstantsUtils.DRIVER_NAME_MYSQL.equals(genConfig.getJdbcDriverName())) {
-                getAllTableInfo(dm, DataSourceUtils.getMysqlDataBaseName(genConfig.getJdbcDriverUrl()), genConfig.getJdbcSchema(), context);
-            } else if (ConstantsUtils.DRIVER_NAME_POSTGRES.equals(genConfig.getJdbcDriverName())) {
-                getAllTableInfo(dm, DataSourceUtils.getPostgresDataBaseName(genConfig.getJdbcDriverUrl()), genConfig.getJdbcSchema(), context);
-            }
+            getAllTableInfo(dm, dataHandler.getDataBaseName(params.getJdbcDriverUrl()), params.getJdbcSchema(), context);
         } catch (SQLException sqlE) {
             log.error(sqlE.getMessage());
             throw new GeneratorException("数据库连接失败，请检查填写的数据库信息是否正确！");
@@ -48,55 +52,32 @@ public class MetaService {
                 conn.close();
             }
         }
-
         resolveFks(context);
-
         return context;
     }
 
     /**
      * 获取数据库连接。
      *
-     * @param genConfig 生成配置。
+     * @param params 生成配置。
      * @return 数据库连接。
      * @throws SQLException sql异常。
      */
-    private Connection getConnection(GeneratorConfig genConfig) throws SQLException {
-
-        /*DataSourceProperties properties = new DataSourceProperties();
-
-         *//* props.setProperty("user", genConfig.getJdbcUserName());
-            props.setProperty("password", genConfig.getJdbcPassword());
-            // 设置可以获取remarks信息
-            props.setProperty("remarks", "true");
-            // 设置可以获取tables remarks信息
-            props.setProperty("useInformationSchema", "true");*//*
-
-        properties.setDriverClassName(genConfig.getJdbcDriverName());
-        properties.setUrl(genConfig.getJdbcDriverUrl());
-        properties.setUsername(genConfig.getJdbcUserName());
-        properties.setPassword(genConfig.getJdbcPassword());
-        DataSource dataSource = properties.initializeDataSourceBuilder()
-                .type(properties.getType())
-                .build();
-
-        Connection conn = dataSource.getConnection();
-        return conn;*/
+    private Connection getConnection(DataSourceParams params) throws SQLException {
         Connection conn;
-        if (genConfig.getJdbcDriverName().equals(ConstantsUtils.JDBC_DRIVER_URL)) {
+        if (params.getJdbcDriverName().equals(ConstantsUtils.JDBC_DRIVER_URL)) {
             Properties props = new Properties();
-
-            props.setProperty("user", genConfig.getJdbcUserName());
-            props.setProperty("password", genConfig.getJdbcPassword());
+            props.setProperty("user", params.getJdbcUserName());
+            props.setProperty("password", params.getJdbcPassword());
             // 设置可以获取remarks信息
             props.setProperty("remarks", "true");
             // 设置可以获取tables remarks信息
             props.setProperty("useInformationSchema", "true");
 
-            conn = DriverManager.getConnection(genConfig.getJdbcDriverUrl(), props);
+            conn = DriverManager.getConnection(params.getJdbcDriverUrl(), props);
         } else {
-            conn = DriverManager.getConnection(genConfig.getJdbcDriverUrl(),
-                    genConfig.getJdbcUserName(), genConfig.getJdbcPassword());
+            conn = DriverManager.getConnection(params.getJdbcDriverUrl(),
+                    params.getJdbcUserName(), params.getJdbcPassword());
         }
         return conn;
     }
@@ -274,45 +255,12 @@ public class MetaService {
 
         String colType = rsCol.getString("TYPE_NAME");
         String digits = rsCol.getString("DECIMAL_DIGITS");
-        String ct = parseDataType(colType, digits);
         col.setColType(colType);
-        col.setJavaType("TIMESTAMP".equals(colType) ? "Date" : ct);
+        col.setJavaType(dataHandler.parseDataType(colType));
         col.setFormatCode(parseFormatCode(colType, digits));
         return col;
     }
 
-    /**
-     * 将数据类型转换为java类型。
-     *
-     * @param colType 列的数据库数据类型
-     * @param digits  数据类型的长度
-     * @return java类型。
-     */
-    private String parseDataType(String colType, String digits) {
-        if ("VARCHAR".equals(colType) || "CHAR".equals(colType) || "VARCHAR2".equals(colType)) {
-            return ConstantsUtils.TYPE_STRING;
-        }
-        if ("TIMESTAMP".equals(colType)) {
-            return ConstantsUtils.TYPE_TIMESTAMP;
-        }
-        if ("INT".equals(colType) || "SMALLINT".equals(colType)
-                || "TINYINT".equals(colType) || "INTEGER".equals(colType) || "NUMBER".equals(colType)) {
-            return "0".equals(digits) ? ConstantsUtils.TYPE_INTEGER : ConstantsUtils.TYPE_DECIMAL;
-        }
-        if ("BIGINT".equals(colType)) {
-            return "Long";
-        }
-        if ("DECIMAL".equals(colType)) {
-            return ConstantsUtils.TYPE_DECIMAL;
-        }
-        if ("DATETIME".equals(colType) || "TIMESTAMP(6)".equals(colType) || "DATE".equals(colType)) {
-            return "java.util.Date";
-        }
-        if ("BLOB".equals(colType)) {
-            return "Object";
-        }
-        return "String";
-    }
 
     /**
      * entity类toString方法需要的，字段对应String.format代码。

@@ -1,29 +1,17 @@
-package net.vtstar.codegenerator.generate.service.impl;
+package net.vtstar.codegenerator.generate.service;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import net.vtstar.codegenerator.generate.domain.FreemarkerTemplate;
+import net.vtstar.codegenerator.generate.domain.GenVo;
 import net.vtstar.codegenerator.generate.domain.GeneratorConfig;
 import net.vtstar.codegenerator.generate.domain.Table;
-import net.vtstar.codegenerator.generate.file.properties.GeneratorProperties;
-import net.vtstar.codegenerator.generate.service.GeneratorService;
-import net.vtstar.codegenerator.record.domain.CreateColumnRecord;
-import net.vtstar.codegenerator.record.domain.CreateTableRecord;
-import net.vtstar.codegenerator.record.domain.OperateRecord;
-import net.vtstar.codegenerator.record.service.CreateColumnRecordService;
-import net.vtstar.codegenerator.record.service.CreateTableRecordService;
-import net.vtstar.codegenerator.record.service.OperateRecordService;
 import net.vtstar.codegenerator.utils.ConstantsUtils;
-import net.vtstar.codegenerator.utils.DataSourceUtils;
 import net.vtstar.codegenerator.utils.FilePathUtils;
-import net.vtstar.codegenerator.utils.ZipUtils;
-import net.vtstar.user.domain.UserInfo;
-import net.vtstar.user.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
@@ -36,23 +24,12 @@ import java.util.*;
 
 /**
  * @Auther: liuxu
- * @Date: 2019/3/13
+ * @Date: 2019/6/27
  * @Description:
  */
-@Profile("pro")
 @Slf4j
-@Service
-public class GeneratorServiceProImpl implements GeneratorService {
-
-    @Autowired
-    private OperateRecordService operateRecordService;
-    @Autowired
-    private CreateTableRecordService createTableRecordService;
-    @Autowired
-    private CreateColumnRecordService createColumnRecordService;
-    @Autowired
-    private GeneratorProperties generatorProperties;
-
+@Component
+public class DefaultGenerator {
     /**
      * 用来加载加载模板
      */
@@ -103,77 +80,21 @@ public class GeneratorServiceProImpl implements GeneratorService {
         ft6.setPkg(ConstantsUtils.CONTROLLER_PKG);
         ft6.setSuffix(ConstantsUtils.CONTROLLER_SUFFIX);
         templates.add(ft6);
-
     }
 
-    /**
-     * 根据表名生成文件。
-     *
-     * @param conf        代码生成配置
-     * @param choseTables 要生成代码的表
-     * @throws IOException       抛出的IO异常
-     * @throws TemplateException 抛出的freemarker异常
-     */
-    @Override
-    @Transactional
-    public void doGenerator(GeneratorConfig conf, List<Table> choseTables) throws Exception {
-        log.info("generatorpath:" + generatorProperties.getGenenratorPath() + "/" + UserUtil.getUsername() + "---------------------------------");
-        for (Table table : choseTables) {
+    public void doGenerator(GenVo genVo) throws Exception {
+        for (Table table : genVo.getTables()) {
             log.info("Start generating files of table " + table.getTableName() + ".........");
-            Map<String, Object> context = buildContext(conf, table);
+            Map<String, Object> context = buildContext(genVo.getConfig(), table);
             // 生成sqlmap
-            createSqlmapper(conf, context, sqlMapTemplate);
+            createSqlmapper(genVo.getConfig(), context, sqlMapTemplate);
 
             // 生成java
             for (FreemarkerTemplate ft : templates) {
-                createClass(conf, context, ft);
+                createClass(genVo.getConfig(), context, ft);
             }
         }
-        String sourcePath = generatorProperties.getGenenratorPath() + "\\" + UserUtil.getUsername() + "\\" + (conf.getPackageName()).replaceAll("\\.", "\\\\") + "\\";
-        sourcePath = FilePathUtils.getRealFilePath(sourcePath);
-        String zipPath = generatorProperties.getGenenratorPath() + "\\" + UserUtil.getUsername() + "\\code.zip";
-        zipPath = FilePathUtils.getRealFilePath(zipPath);
-        ZipUtils.createZip(sourcePath, zipPath, true);
-        record(conf, choseTables);
-
     }
-
-    private void record(GeneratorConfig conf, List<Table> choseTables) {
-        /**
-         * 记录
-         */
-        UserInfo userInfo = UserUtil.getUserInfo();
-        OperateRecord operateRecord = new OperateRecord();
-        operateRecord.setUserId(userInfo.getId());
-        operateRecord.setDbUsername(conf.getJdbcUserName());
-        operateRecord.setName(userInfo.getName());
-        operateRecord.setUsername(userInfo.getUsername());
-
-        if (ConstantsUtils.DRIVER_NAME_MYSQL.equals(conf.getJdbcDriverName())) {
-            operateRecord.setHost(DataSourceUtils.getMysqlDataBaseHost(conf.getJdbcDriverUrl()));
-            operateRecord.setDbName(DataSourceUtils.getMysqlDataBaseName(conf.getJdbcDriverUrl()));
-        } else if (ConstantsUtils.DRIVER_NAME_POSTGRES.equals(conf.getJdbcDriverName())) {
-            operateRecord.setHost(DataSourceUtils.getPostgresDataBaseHost(conf.getJdbcDriverUrl()));
-            operateRecord.setDbName(DataSourceUtils.getMysqlDataBaseName(conf.getJdbcDriverUrl()));
-        }
-        operateRecordService.create(operateRecord);
-
-        choseTables.forEach(table -> {
-            // 生成表记录
-            CreateTableRecord tableRecord = new CreateTableRecord();
-            tableRecord.setRecordId(operateRecord.getId());
-            tableRecord.setTableName(table.getTableName());
-            createTableRecordService.create(tableRecord);
-            table.getCols().forEach(column -> {
-                CreateColumnRecord columnRecord = new CreateColumnRecord();
-                columnRecord.setTableId(tableRecord.getId());
-                columnRecord.setColumnName(column.getColName());
-                columnRecord.setColumnType(column.getColType());
-                createColumnRecordService.create(columnRecord);
-            });
-        });
-    }
-
     /**
      * 构建代码生成需要的上下文。
      *
@@ -216,7 +137,7 @@ public class GeneratorServiceProImpl implements GeneratorService {
             throws IOException, TemplateException {
 
         Table tm = (Table) context.get("meta");
-        String sqlMapFolder = generatorProperties.getGenenratorPath() + "\\" + UserUtil.getUsername() + "\\" + (conf.getPackageName() + "." + tm.getModule() + "."
+        String sqlMapFolder = conf.getOutPath() + (conf.getPackageName() + "." + tm.getModule() + "."
                 + "mybatis").replaceAll("\\.", "\\\\") + "\\";
 
         sqlMapFolder = FilePathUtils.getRealFilePath(sqlMapFolder);
@@ -241,7 +162,7 @@ public class GeneratorServiceProImpl implements GeneratorService {
             throws IOException, TemplateException {
         Table tm = (Table) context.get("meta");
 
-        String classFolder = generatorProperties.getGenenratorPath() + "\\" + UserUtil.getUsername() + "\\" + (conf.getPackageName() + "." + tm.getModule() + "."
+        String classFolder = conf.getOutPath() + (conf.getPackageName() + "." + tm.getModule() + "."
                 + temp.getPkg()).replaceAll("\\.", "\\\\") + "\\";
 
         classFolder = FilePathUtils.getRealFilePath(classFolder);

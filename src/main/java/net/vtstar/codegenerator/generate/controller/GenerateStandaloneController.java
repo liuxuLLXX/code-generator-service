@@ -2,6 +2,7 @@ package net.vtstar.codegenerator.generate.controller;
 
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
+import net.vtstar.codegenerator.generate.domain.DataSourceParams;
 import net.vtstar.codegenerator.generate.domain.GenVo;
 import net.vtstar.codegenerator.generate.domain.GeneratorConfig;
 import net.vtstar.codegenerator.generate.domain.Table;
@@ -35,14 +36,14 @@ public class GenerateStandaloneController {
     private GeneratorService generatorService;
 
     @PostMapping("/allTables")
-    private Return allTables(@RequestBody GeneratorConfig config) throws Exception {
-        Set<Table> tables = metaService.getTables(config).getTables();
+    private Return allTables(@RequestBody DataSourceParams params) throws Exception {
+        Set<Table> tables = metaService.getTables(params).getTables();
         return Return.success(tables);
     }
 
     @PostMapping("/createCodeStandalone")
     public Return createCodeStandalone(@RequestBody GenVo genVo) throws Exception {
-        generatorService.doGenerator(genVo.getConfig(), genVo.getTables());
+        generatorService.doGenerator(genVo);
         return Return.success();
     }
 
