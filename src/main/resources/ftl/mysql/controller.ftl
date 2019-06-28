@@ -18,6 +18,7 @@ import net.vtstar.utils.domain.Return;
 
 /**
  * Date: ${currentDate}
+ *
  * @author ${author}
  * @Description: ${meta.tableDesc} Controller
  */
@@ -33,11 +34,11 @@ public class ${meta.className}${ControllerSuffix} {
 
     @ApiOperation("分页查询列表")
     @ApiImplicitParams(value = {
-    @ApiImplicitParam(name = "pageNum", value = "请求页码", dataType = "number", paramType = "query"),
-    @ApiImplicitParam(name = "pageSize", value = "页容量", dataType = "number", paramType = "query"),
+        @ApiImplicitParam(name = "pageNum", value = "请求页码", dataType = "number", paramType = "query"),
+        @ApiImplicitParam(name = "pageSize", value = "页容量", dataType = "number", paramType = "query"),
     })
     @GetMapping("/page")
-    private Return pageList(@RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize){
+    private Return pageList(@RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize) {
         Assert.notNull(pageNum, "pageNum is null");
         Assert.notNull(pageSize, "pageSize is null");
         List<${meta.className}> ${meta.firstLowerClassName}List = ${meta.firstLowerClassName}${ServiceSuffix}.pageList(pageNum, pageSize);
@@ -46,22 +47,22 @@ public class ${meta.className}${ControllerSuffix} {
 
     @ApiOperation("新建${meta.tableDesc}")
     @PostMapping
-    private Return create(@Valid @RequestBody ${meta.className} ${meta.firstLowerClassName}){
+    private Return create(@Valid @RequestBody ${meta.className} ${meta.firstLowerClassName}) {
         ${meta.firstLowerClassName}${ServiceSuffix}.create(${meta.firstLowerClassName});
         return Return.success();
     }
 
     @ApiOperation("修改${meta.tableDesc}")
     @PutMapping
-    private Return update(@Valid @RequestBody ${meta.className} ${meta.firstLowerClassName}){
+    private Return update(@Valid @RequestBody ${meta.className} ${meta.firstLowerClassName}) {
         Assert.notNull(${meta.firstLowerClassName}.getId(), "id is null");
-        ${meta.firstLowerClassName}${ServiceSuffix}.update( ${meta.firstLowerClassName});
+        ${meta.firstLowerClassName}${ServiceSuffix}.update(${meta.firstLowerClassName});
         return Return.success();
     }
 
     @ApiOperation("删除${meta.tableDesc}（根据id删除单个${meta.tableDesc}）")
     @DeleteMapping("/{id}")
-    private Return delete(@PathVariable Long id){
+    private Return delete(@PathVariable Long id) {
         Assert.notNull(id, "${meta.tableDesc}Id is null");
         ${meta.firstLowerClassName}Service.deleteById(id);
         return Return.success();

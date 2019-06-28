@@ -9,10 +9,13 @@ import net.vtstar.codegenerator.generate.domain.GenVo;
 import net.vtstar.codegenerator.generate.domain.GeneratorConfig;
 import net.vtstar.codegenerator.generate.domain.Table;
 import net.vtstar.codegenerator.utils.ConstantsUtils;
+import net.vtstar.codegenerator.utils.DataSourceUtils;
 import net.vtstar.codegenerator.utils.FilePathUtils;
+import net.vtstar.utils.asserts.ParamAssert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -35,9 +38,9 @@ public class DefaultGenerator {
      */
     private Configuration cfg;
 
-    private Template sqlMapTemplate;
+    private Map<String, Template> mapperXmlMap = new HashMap<>();
 
-    private List<FreemarkerTemplate> templates;
+    private Map<String, List<FreemarkerTemplate>> templateMap = new HashMap<>();
 
     /**
      * 初始化。
@@ -46,55 +49,63 @@ public class DefaultGenerator {
      */
     @PostConstruct
     public void init() throws IOException {
-        sqlMapTemplate = cfg.getTemplate("mapper_xml.ftl");
+        Resource resource = new ClassPathResource("ftl");
+        File[] files = resource.getFile().listFiles();
+        for (File file : files) {
+            mapperXmlMap.put(file.getName(), cfg.getTemplate(file.getName() + ConstantsUtils.MAPPER_XML_PATH));
+            List<FreemarkerTemplate> templates = new ArrayList<>();
+            // 生成domain
+            FreemarkerTemplate ft1 = new FreemarkerTemplate();
+            Template temp1 = cfg.getTemplate(file.getName() + ConstantsUtils.DOMAIN_PATH);
+            ft1.setTemplate(temp1);
+            ft1.setPkg(ConstantsUtils.DOMAIN_PKG);
+            templates.add(ft1);
 
-        templates = new ArrayList<>();
+            // mapper
+            FreemarkerTemplate ft2 = new FreemarkerTemplate();
+            Template temp2 = cfg.getTemplate(file.getName() + ConstantsUtils.MAPPER_INTERFACE_PATH);
+            ft2.setTemplate(temp2);
+            ft2.setPkg(ConstantsUtils.MAPPER_PKG);
+            ft2.setSuffix(ConstantsUtils.MAPPER_SUFFIX);
+            templates.add(ft2);
 
-        // 生成domain
-        FreemarkerTemplate ft1 = new FreemarkerTemplate();
-        Template temp1 = cfg.getTemplate("domain.ftl");
-        ft1.setTemplate(temp1);
-        ft1.setPkg(ConstantsUtils.DOMAIN_PKG);
-        templates.add(ft1);
+            // service
+            FreemarkerTemplate ft3 = new FreemarkerTemplate();
+            Template temp3 = cfg.getTemplate(file.getName() + ConstantsUtils.SERVICE_PATH);
+            ft3.setTemplate(temp3);
+            ft3.setPkg(ConstantsUtils.SERVICE_PKG);
+            ft3.setSuffix(ConstantsUtils.SERVICE_SUFFIX);
+            templates.add(ft3);
 
-        // mapper
-        FreemarkerTemplate ft2 = new FreemarkerTemplate();
-        Template temp2 = cfg.getTemplate("mapper_interface.ftl");
-        ft2.setTemplate(temp2);
-        ft2.setPkg(ConstantsUtils.MAPPER_PKG);
-        ft2.setSuffix(ConstantsUtils.MAPPER_SUFFIX);
-        templates.add(ft2);
+            // controller
+            FreemarkerTemplate ft6 = new FreemarkerTemplate();
+            Template temp6 = cfg.getTemplate(file.getName() + ConstantsUtils.CONTROLLER_PATH);
+            ft6.setTemplate(temp6);
+            ft6.setPkg(ConstantsUtils.CONTROLLER_PKG);
+            ft6.setSuffix(ConstantsUtils.CONTROLLER_SUFFIX);
+            templates.add(ft6);
+            templateMap.put(file.getName(), templates);
+        }
 
-        // service
-        FreemarkerTemplate ft3 = new FreemarkerTemplate();
-        Template temp3 = cfg.getTemplate("service.ftl");
-        ft3.setTemplate(temp3);
-        ft3.setPkg(ConstantsUtils.SERVICE_PKG);
-        ft3.setSuffix(ConstantsUtils.SERVICE_SUFFIX);
-        templates.add(ft3);
-
-        // controller
-        FreemarkerTemplate ft6 = new FreemarkerTemplate();
-        Template temp6 = cfg.getTemplate("controller.ftl");
-        ft6.setTemplate(temp6);
-        ft6.setPkg(ConstantsUtils.CONTROLLER_PKG);
-        ft6.setSuffix(ConstantsUtils.CONTROLLER_SUFFIX);
-        templates.add(ft6);
     }
 
     public void doGenerator(GenVo genVo) throws Exception {
         for (Table table : genVo.getTables()) {
             log.info("Start generating files of table " + table.getTableName() + ".........");
+            String driver = DataSourceUtils.getDataBaseType(genVo.getDataSourceParams().getJdbcDriverName());
+            ParamAssert.notEmpty(driver, "目前不支持该数据库 : " + genVo.getDataSourceParams().getJdbcDriverName());
+            templateMap.get(genVo.getDataSourceParams().getJdbcDriverUrl());
+
             Map<String, Object> context = buildContext(genVo.getConfig(), table);
             // 生成sqlmap
-            createSqlmapper(genVo.getConfig(), context, sqlMapTemplate);
-
+            createSqlmapper(genVo.getConfig(), context,  mapperXmlMap.get(driver));
             // 生成java
-            for (FreemarkerTemplate ft : templates) {
+            for (FreemarkerTemplate ft : templateMap.get(driver)) {
                 createClass(genVo.getConfig(), context, ft);
             }
         }
     }
+
     /**
      * 构建代码生成需要的上下文。
      *
@@ -198,7 +209,7 @@ public class DefaultGenerator {
      * @param folder 文件夹
      */
     private void prepareFolder(String folder) {
-        log.info("begin generator catalog, path ---->" + folder);
+        log.info("begin generator catalog, path ----> {}", folder);
         File fd2 = new File(folder);
         fd2.mkdirs();
     }

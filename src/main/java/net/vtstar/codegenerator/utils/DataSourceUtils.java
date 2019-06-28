@@ -1,5 +1,7 @@
 package net.vtstar.codegenerator.utils;
 
+import org.apache.tomcat.util.bcel.Const;
+
 /**
  * @Auther: liuxu
  * @Date: 2019/2/21
@@ -50,5 +52,21 @@ public final class DataSourceUtils {
         String str = driverUrl.substring(18);
         return str.substring(0, str.indexOf(":"));
     }
+
+    public static String getDataBaseType(String driverName) {
+        String driver = "";
+        switch (driverName) {
+            case ConstantsUtils.DRIVER_NAME_MYSQL:
+                driver = "mysql";
+                break;
+            case ConstantsUtils.DRIVER_NAME_POSTGRESQL:
+                driver = "postgre";
+                break;
+            default:
+                break;
+        }
+        return driver;
+    }
+
 
 }

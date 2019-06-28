@@ -21,6 +21,13 @@
     "outPath": "x:/xx/",
     "packageName": "xx.xxx.xx.xxx"
   },
+  "dataSourceParams": {
+    "jdbcDriverName": "string",
+    "jdbcDriverUrl": "string",
+    "jdbcPassword": "string",
+    "jdbcSchema": "string",
+    "jdbcUserName": "string"
+  },
   "tables": [
       "xxx" : {"xx": "xx"}
   ]

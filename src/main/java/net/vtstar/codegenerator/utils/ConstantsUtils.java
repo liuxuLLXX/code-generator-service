@@ -69,5 +69,15 @@ public class ConstantsUtils {
 
     public static final String DRIVER_NAME_POSTGRESQL = "org.postgresql.Driver";
 
+    public static final String MAPPER_INTERFACE_PATH = "/mapper_interface.ftl";
+
+    public static final String MAPPER_XML_PATH = "/mapper_xml.ftl";
+
+    public static final String CONTROLLER_PATH = "/controller.ftl";
+
+    public static final String DOMAIN_PATH = "/domain.ftl";
+
+    public static final String SERVICE_PATH = "/service.ftl";
+
 
 }
