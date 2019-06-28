@@ -49,7 +49,7 @@ public class DefaultGenerator {
      */
     @PostConstruct
     public void init() throws IOException {
-        Resource resource = new ClassPathResource("ftl");
+        Resource resource = new ClassPathResource("\\ftl");
         log.info("file name------> :{}", resource.getFile().getName());
         File[] files = resource.getFile().listFiles();
         for (File file : files) {
