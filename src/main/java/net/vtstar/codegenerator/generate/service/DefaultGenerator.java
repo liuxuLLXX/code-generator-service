@@ -13,8 +13,7 @@ import net.vtstar.codegenerator.utils.DataSourceUtils;
 import net.vtstar.codegenerator.utils.FilePathUtils;
 import net.vtstar.utils.asserts.ParamAssert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -42,6 +41,9 @@ public class DefaultGenerator {
 
     private Map<String, List<FreemarkerTemplate>> templateMap = new HashMap<>();
 
+    @Value("${support.list}")
+    List<String> supportList;
+
     /**
      * 初始化。
      *
@@ -49,23 +51,19 @@ public class DefaultGenerator {
      */
     @PostConstruct
     public void init() throws IOException {
-        ClassPathResource resource = new ClassPathResource("ftl");
-        log.info("file name------> :{}", resource.getFile().getName());
-        File[] files = resource.getFile().listFiles();
-        for (File file : files) {
-            mapperXmlMap.put(file.getName(), cfg.getTemplate(file.getName() + ConstantsUtils.MAPPER_XML_PATH));
-            log.info("bingo ------ ");
+        for (String support : supportList) {
+            mapperXmlMap.put(support, cfg.getTemplate(support + ConstantsUtils.MAPPER_XML_PATH));
             List<FreemarkerTemplate> templates = new ArrayList<>();
             // 生成domain
             FreemarkerTemplate ft1 = new FreemarkerTemplate();
-            Template temp1 = cfg.getTemplate(file.getName() + ConstantsUtils.DOMAIN_PATH);
+            Template temp1 = cfg.getTemplate(support + ConstantsUtils.DOMAIN_PATH);
             ft1.setTemplate(temp1);
             ft1.setPkg(ConstantsUtils.DOMAIN_PKG);
             templates.add(ft1);
 
             // mapper
             FreemarkerTemplate ft2 = new FreemarkerTemplate();
-            Template temp2 = cfg.getTemplate(file.getName() + ConstantsUtils.MAPPER_INTERFACE_PATH);
+            Template temp2 = cfg.getTemplate(support + ConstantsUtils.MAPPER_INTERFACE_PATH);
             ft2.setTemplate(temp2);
             ft2.setPkg(ConstantsUtils.MAPPER_PKG);
             ft2.setSuffix(ConstantsUtils.MAPPER_SUFFIX);
@@ -73,7 +71,7 @@ public class DefaultGenerator {
 
             // service
             FreemarkerTemplate ft3 = new FreemarkerTemplate();
-            Template temp3 = cfg.getTemplate(file.getName() + ConstantsUtils.SERVICE_PATH);
+            Template temp3 = cfg.getTemplate(support + ConstantsUtils.SERVICE_PATH);
             ft3.setTemplate(temp3);
             ft3.setPkg(ConstantsUtils.SERVICE_PKG);
             ft3.setSuffix(ConstantsUtils.SERVICE_SUFFIX);
@@ -81,12 +79,12 @@ public class DefaultGenerator {
 
             // controller
             FreemarkerTemplate ft6 = new FreemarkerTemplate();
-            Template temp6 = cfg.getTemplate(file.getName() + ConstantsUtils.CONTROLLER_PATH);
+            Template temp6 = cfg.getTemplate(support + ConstantsUtils.CONTROLLER_PATH);
             ft6.setTemplate(temp6);
             ft6.setPkg(ConstantsUtils.CONTROLLER_PKG);
             ft6.setSuffix(ConstantsUtils.CONTROLLER_SUFFIX);
             templates.add(ft6);
-            templateMap.put(file.getName(), templates);
+            templateMap.put(support, templates);
         }
 
     }
