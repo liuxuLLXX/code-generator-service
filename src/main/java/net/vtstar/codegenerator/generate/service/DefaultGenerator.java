@@ -50,9 +50,11 @@ public class DefaultGenerator {
     @PostConstruct
     public void init() throws IOException {
         Resource resource = new ClassPathResource("ftl");
+        log.info("file name------> :{}", resource.getFile().getName());
         File[] files = resource.getFile().listFiles();
         for (File file : files) {
             mapperXmlMap.put(file.getName(), cfg.getTemplate(file.getName() + ConstantsUtils.MAPPER_XML_PATH));
+            log.info("bingo ------ ");
             List<FreemarkerTemplate> templates = new ArrayList<>();
             // 生成domain
             FreemarkerTemplate ft1 = new FreemarkerTemplate();
