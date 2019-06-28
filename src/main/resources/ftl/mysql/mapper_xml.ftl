@@ -5,7 +5,7 @@
     <!-- result map -->
     <resultMap type="${pkgName}.${meta.module}.${domainFolder}.${meta.className}" id="${meta.firstLowerClassName}Map">
         <#list meta.cols as col>
-            <<#if (col.pkFlag)>id<#else>result</#if> property="${col.fieldName}" column="${col.colName}" javaType="${col.javaType}"/>
+        <<#if (col.pkFlag)>id<#else>result</#if> property="${col.fieldName}" column="${col.colName}" javaType="${col.javaType}"/>
         </#list>
     </resultMap>
 

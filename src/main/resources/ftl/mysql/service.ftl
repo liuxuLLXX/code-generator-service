@@ -17,10 +17,10 @@ import ${pkgName}.${meta.module}.${domainFolder}.${meta.className};
  */
 @Slf4j
 @Service
-public class ${meta.className}${ServiceSuffix}{
+public class ${meta.className}${ServiceSuffix} {
 
     @Autowired
-    private ${meta.className}${MapperSuffix}  ${meta.firstLowerClassName}${MapperSuffix};
+    private ${meta.className}${MapperSuffix} ${meta.firstLowerClassName}${MapperSuffix};
 
     /**
      * 分页查询
@@ -32,7 +32,7 @@ public class ${meta.className}${ServiceSuffix}{
     }
 
     /**
-     *  新增
+     * 新增
      */
     public void create(${meta.className} ${meta.firstLowerClassName}) {
         Assert.notNull(${meta.firstLowerClassName}, "${meta.firstLowerClassName}不能为null！");

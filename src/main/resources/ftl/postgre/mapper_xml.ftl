@@ -5,7 +5,7 @@
     <!-- result map -->
     <resultMap type="${pkgName}.${meta.module}.${domainFolder}.${meta.className}" id="${meta.firstLowerClassName}Map">
         <#list meta.cols as col>
-            <<#if (col.pkFlag)>id<#else>result</#if> property="${col.fieldName}" column="${col.colName}" javaType="${col.javaType}"/>
+        <<#if (col.pkFlag)>id<#else>result</#if> property="${col.fieldName}" column="${col.colName}" javaType="${col.javaType}"/>
         </#list>
     </resultMap>
 
@@ -19,19 +19,20 @@
     <!-- sqlWhere -->
     <sql id="SQL_${meta.tableNameUC}_WHERE">
         <#list meta.cols as col>
-            <#if col.colType == "String">
+        <#if col.colType == "String">
         <if test="null != ${col.fieldName} and ${col.fieldName}.length() != 0">
             <#else>
-        <if test="null != ${col.fieldName}">
-            </#if>
-            AND ${meta.tableAlias}_.${col.colName} = ${r'#{' + col.fieldName + '}'}
-        </if>
-        </#list>
+            <if test="null != ${col.fieldName}">
+                </#if>
+                AND ${meta.tableAlias}_.${col.colName} = ${r'#{' + col.fieldName + '}'}
+            </if>
+            </#list>
     </sql>
 
     <#--getList-->
     <!-- Query All  -->
-    <select id="getList" parameterType="${pkgName}.${meta.module}.${domainFolder}.${meta.className}" resultMap="${meta.firstLowerClassName}Map">
+    <select id="getList" parameterType="${pkgName}.${meta.module}.${domainFolder}.${meta.className}"
+            resultMap="${meta.firstLowerClassName}Map">
         select
         <include refid="SQL_${meta.tableNameUC}_COLUMN"/>
         from ${meta.tableNameUC} ${meta.tableAlias}_
@@ -55,16 +56,16 @@
         insert into ${meta.tableNameUC}
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <#list meta.cols as col>
-            <if test="null != ${col.fieldName}">
-                ${col.colName}<#if col_index + 1 < meta.cols?size>,</#if>
-            </if>
+                <if test="null != ${col.fieldName}">
+                    ${col.colName}<#if col_index + 1 < meta.cols?size>,</#if>
+                </if>
             </#list>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <#list meta.cols as col>
-            <if test="null != ${col.fieldName}">
-                ${r'#{' + col.fieldName + '}'}<#if col_index + 1 < meta.cols?size>,</#if>
-            </if>
+                <if test="null != ${col.fieldName}">
+                    ${r'#{' + col.fieldName + '}'}<#if col_index + 1 < meta.cols?size>,</#if>
+                </if>
             </#list>
         </trim>
         returning id
@@ -83,9 +84,9 @@
         update ${meta.tableNameUC}
         <set>
             <#list meta.cols as col>
-            <if test="null != ${col.fieldName}">
-                ${col.colName} = ${r'#{' + col.fieldName + '}'}<#if col_index + 1 < meta.cols?size>,</#if>
-            </if>
+                <if test="null != ${col.fieldName}">
+                    ${col.colName} = ${r'#{' + col.fieldName + '}'}<#if col_index + 1 < meta.cols?size>,</#if>
+                </if>
             </#list>
         </set>
         where id = ${r'#{id}'}
