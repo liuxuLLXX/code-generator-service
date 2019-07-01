@@ -3,10 +3,10 @@ package net.vtstar.codegenerator.record.service;
 import lombok.extern.slf4j.Slf4j;
 import net.vtstar.codegenerator.record.domain.OperateRecord;
 import net.vtstar.codegenerator.record.mapper.OperateRecordMapper;
+import net.vtstar.utils.asserts.ParamAssert;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.Assert;
 import java.util.List;
 import com.github.pagehelper.PageHelper;
 import java.util.Date;
@@ -39,7 +39,7 @@ public class OperateRecordService{
      *  新增
      */
     public void create(OperateRecord operateRecord) {
-        Assert.notNull(operateRecord, "operateRecord不能为null！");
+        ParamAssert.notNull(operateRecord, "operateRecord不能为null！");
         operateRecord.setStatus("1");
         operateRecord.setCreateTime(new Date());
         operateRecord.setUpdateTime(new Date());
@@ -51,8 +51,8 @@ public class OperateRecordService{
      * 修改
      */
     public void update(OperateRecord operateRecord) {
-        Assert.notNull(operateRecord, "operateRecord不能为null！");
-        Assert.notNull(operateRecord.getId(), "operateRecord不能为null！");
+        ParamAssert.notNull(operateRecord, "operateRecord不能为null！");
+        ParamAssert.notNull(operateRecord.getId(), "operateRecord不能为null！");
         operateRecordMapper.update(operateRecord);
     }
 

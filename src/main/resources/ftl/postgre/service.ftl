@@ -3,7 +3,7 @@ package ${pkgName}.${meta.module}.${serviceFolder};
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.Assert;
+import net.vtstar.utils.asserts.ParamAssert;
 import java.util.List;
 import com.github.pagehelper.PageHelper;
 import java.util.Date;
@@ -35,7 +35,7 @@ public class ${meta.className}${ServiceSuffix} {
      * 新增
      */
     public void create(${meta.className} ${meta.firstLowerClassName}) {
-        Assert.notNull(${meta.firstLowerClassName}, "${meta.firstLowerClassName}不能为null！");
+        ParamAssert.notNull(${meta.firstLowerClassName}, "${meta.firstLowerClassName}不能为null！");
         ${meta.firstLowerClassName}.setStatus("1");
         ${meta.firstLowerClassName}.setCreateTime(new Date());
         ${meta.firstLowerClassName}.setUpdateTime(new Date());
@@ -47,8 +47,8 @@ public class ${meta.className}${ServiceSuffix} {
      * 修改
      */
     public void update(${meta.className} ${meta.firstLowerClassName}) {
-        Assert.notNull(${meta.firstLowerClassName}, "${meta.firstLowerClassName}不能为null！");
-        Assert.notNull(${meta.firstLowerClassName}.getId(), "${meta.firstLowerClassName}不能为null！");
+        ParamAssert.notNull(${meta.firstLowerClassName}, "${meta.firstLowerClassName}不能为null！");
+        ParamAssert.notNull(${meta.firstLowerClassName}.getId(), "${meta.firstLowerClassName}不能为null！");
         ${meta.firstLowerClassName}${MapperSuffix}.update(${meta.firstLowerClassName});
     }
 

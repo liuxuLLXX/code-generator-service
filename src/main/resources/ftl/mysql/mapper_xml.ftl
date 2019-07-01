@@ -19,7 +19,7 @@
     <!-- sqlWhere -->
     <sql id="SQL_${meta.tableNameUC}_WHERE">
         <#list meta.cols as col>
-            <#if col.colType == "String">
+            <#if col.javaType == "String">
         <if test="null != ${col.fieldName} and ${col.fieldName}.length() != 0">
             <#else>
         <if test="null != ${col.fieldName}">

@@ -4,10 +4,10 @@ import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import net.vtstar.codegenerator.record.domain.CreateTableRecord;
 import net.vtstar.codegenerator.record.mapper.CreateTableRecordMapper;
+import net.vtstar.utils.asserts.ParamAssert;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.Assert;
 import java.util.List;
 import com.github.pagehelper.PageHelper;
 import java.util.Date;
@@ -38,7 +38,7 @@ public class CreateTableRecordService{
      *  新增
      */
     public void create(CreateTableRecord createTableRecord) {
-        Assert.notNull(createTableRecord, "createTableRecord不能为null！");
+        ParamAssert.notNull(createTableRecord, "createTableRecord不能为null！");
         createTableRecord.setStatus("1");
         createTableRecord.setCreateTime(new Date());
         createTableRecord.setUpdateTime(new Date());
@@ -50,8 +50,8 @@ public class CreateTableRecordService{
      * 修改
      */
     public void update(CreateTableRecord createTableRecord) {
-        Assert.notNull(createTableRecord, "createTableRecord不能为null！");
-        Assert.notNull(createTableRecord.getId(), "createTableRecord不能为null！");
+        ParamAssert.notNull(createTableRecord, "createTableRecord不能为null！");
+        ParamAssert.notNull(createTableRecord.getId(), "createTableRecord不能为null！");
         createTableRecordMapper.update(createTableRecord);
     }
 

@@ -7,11 +7,11 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import net.vtstar.codegenerator.record.domain.OperateRecord;
 import net.vtstar.codegenerator.record.service.OperateRecordService;
+import net.vtstar.utils.asserts.ParamAssert;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.util.Assert;
 
 import java.util.List;
 
@@ -45,8 +45,8 @@ public class OperateRecordController {
     public Return pageList(@RequestParam("pageNum") Integer pageNum,
                            @RequestParam("pageSize") Integer pageSize,
                            @RequestParam(value = "condition", required = false) String condition) {
-        Assert.notNull(pageNum, "pageNum is null");
-        Assert.notNull(pageSize, "pageSize is null");
+        ParamAssert.notNull(pageNum, "pageNum is null");
+        ParamAssert.notNull(pageSize, "pageSize is null");
         List<OperateRecord> operateRecordList = operateRecordService.pageList(pageNum, pageSize, condition);
         return Return.success(new PageInfo<>(operateRecordList));
     }

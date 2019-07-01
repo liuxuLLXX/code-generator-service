@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.util.Assert;
+import net.vtstar.utils.asserts.ParamAssert;
 import java.util.List;
 import javax.validation.Valid;
 import com.github.pagehelper.PageInfo;
@@ -39,8 +39,8 @@ public class ${meta.className}${ControllerSuffix} {
     })
     @GetMapping("/page")
     private Return pageList(@RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize) {
-        Assert.notNull(pageNum, "pageNum is null");
-        Assert.notNull(pageSize, "pageSize is null");
+        ParamAssert.notNull(pageNum, "pageNum is null");
+        ParamAssert.notNull(pageSize, "pageSize is null");
         List<${meta.className}> ${meta.firstLowerClassName}List = ${meta.firstLowerClassName}${ServiceSuffix}.pageList(pageNum, pageSize);
         return Return.success(new PageInfo<>(${meta.firstLowerClassName}List));
     }
@@ -55,7 +55,7 @@ public class ${meta.className}${ControllerSuffix} {
     @ApiOperation("修改${meta.tableDesc}")
     @PutMapping
     private Return update(@Valid @RequestBody ${meta.className} ${meta.firstLowerClassName}) {
-        Assert.notNull(${meta.firstLowerClassName}.getId(), "id is null");
+        ParamAssert.notNull(${meta.firstLowerClassName}.getId(), "id is null");
         ${meta.firstLowerClassName}${ServiceSuffix}.update(${meta.firstLowerClassName});
         return Return.success();
     }
@@ -63,7 +63,7 @@ public class ${meta.className}${ControllerSuffix} {
     @ApiOperation("删除${meta.tableDesc}（根据id删除单个${meta.tableDesc}）")
     @DeleteMapping("/{id}")
     private Return delete(@PathVariable Long id) {
-        Assert.notNull(id, "${meta.tableDesc}Id is null");
+        ParamAssert.notNull(id, "${meta.tableDesc}Id is null");
         ${meta.firstLowerClassName}Service.deleteById(id);
         return Return.success();
     }
