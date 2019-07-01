@@ -15,11 +15,13 @@ public class PostgreDefaultHandler extends DefaultDataHandler {
 
     @Override
     public String parseDataType(String colType) {
-        if ("varchar".equals(colType) || "char".equals(colType)
-                || "text".equals(colType) || "bpchar".equals(colType)) {
+        if ("varchar".equals(colType) || "text".equals(colType) || "bpchar".equals(colType)) {
             return ConstantsUtils.TYPE_STRING;
         }
         if ("int2".equals(colType)) {
+            return ConstantsUtils.TYPE_SHORT;
+        }
+        if ("char".equals(colType)) {
             return ConstantsUtils.TYPE_CHARACTER;
         }
         if ("int4".equals(colType) || "serial".equals(colType)) {

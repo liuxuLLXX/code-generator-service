@@ -23,6 +23,7 @@ public class ConstantsUtils {
 
     public static final String TYPE_CHARACTER = "Character";
 
+    public static final String TYPE_SHORT = "short";
 
     public static final String MAPPER_PKG = "mapper";
 
