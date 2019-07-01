@@ -21,6 +21,8 @@ public class ConstantsUtils {
 
     public static final String TYPE_DECIMAL = "BigDecimal";
 
+    public static final String TYPE_CHARACTER = "Character";
+
 
     public static final String MAPPER_PKG = "mapper";
 

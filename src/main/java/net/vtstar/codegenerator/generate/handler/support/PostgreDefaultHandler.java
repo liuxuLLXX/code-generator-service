@@ -19,7 +19,10 @@ public class PostgreDefaultHandler extends DefaultDataHandler {
                 || "text".equals(colType) || "bpchar".equals(colType)) {
             return ConstantsUtils.TYPE_STRING;
         }
-        if ("int2".equals(colType) || "int4".equals(colType) || "serial".equals(colType)) {
+        if ("int2".equals(colType)) {
+            return ConstantsUtils.TYPE_CHARACTER;
+        }
+        if ("int4".equals(colType) || "serial".equals(colType)) {
             return ConstantsUtils.TYPE_INTEGER;
         }
         if ("int8".equals(colType)) {
