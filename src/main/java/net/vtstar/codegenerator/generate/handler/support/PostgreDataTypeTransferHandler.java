@@ -1,6 +1,6 @@
 package net.vtstar.codegenerator.generate.handler.support;
 
-import net.vtstar.codegenerator.generate.handler.DefaultDataHandler;
+import net.vtstar.codegenerator.generate.handler.DataTypeTransferHandler;
 import net.vtstar.codegenerator.utils.ConstantsUtils;
 import net.vtstar.codegenerator.utils.DataSourceUtils;
 import org.springframework.stereotype.Component;
@@ -11,33 +11,33 @@ import org.springframework.stereotype.Component;
  * @Description:
  */
 @Component
-public class PostgreDefaultHandler extends DefaultDataHandler {
+public class PostgreDataTypeTransferHandler implements DataTypeTransferHandler {
 
     @Override
     public String parseDataType(String colType) {
-        if ("varchar".equals(colType) || "text".equals(colType) || "bpchar".equals(colType)) {
+        if ("varchar".equalsIgnoreCase(colType) || "text".equalsIgnoreCase(colType) || "bpchar".equalsIgnoreCase(colType)) {
             return ConstantsUtils.TYPE_STRING;
         }
-        if ("int2".equals(colType)) {
+        if ("int2".equalsIgnoreCase(colType)) {
             return ConstantsUtils.TYPE_SHORT;
         }
-        if ("char".equals(colType)) {
+        if ("char".equalsIgnoreCase(colType)) {
             return ConstantsUtils.TYPE_CHARACTER;
         }
-        if ("int4".equals(colType) || "serial".equals(colType)) {
+        if ("int4".equalsIgnoreCase(colType) || "serial".equalsIgnoreCase(colType)) {
             return ConstantsUtils.TYPE_INTEGER;
         }
-        if ("int8".equals(colType)) {
+        if ("int8".equalsIgnoreCase(colType)) {
             return "Long";
         }
-        if ("numeric".equals(colType)) {
+        if ("numeric".equalsIgnoreCase(colType)) {
             return ConstantsUtils.TYPE_DECIMAL;
         }
-        if ("timestamptz".equals(colType) || "date".equals(colType)) {
+        if ("timestamptz".equalsIgnoreCase(colType) || "date".equalsIgnoreCase(colType)) {
             return "java.util.Date";
         }
-        if ("BLOB".equals(colType)) {
-            return "Object";
+        if ("bytea".equalsIgnoreCase(colType)) {
+            return "java.io.InputStream"; // [B
         }
         return "String";
     }

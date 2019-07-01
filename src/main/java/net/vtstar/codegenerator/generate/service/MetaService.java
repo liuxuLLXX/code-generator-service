@@ -2,7 +2,7 @@ package net.vtstar.codegenerator.generate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import net.vtstar.codegenerator.generate.advice.exception.GeneratorException;
-import net.vtstar.codegenerator.generate.handler.DefaultDataHandler;
+import net.vtstar.codegenerator.generate.handler.DataTypeTransferHandler;
 import net.vtstar.codegenerator.generate.domain.*;
 import net.vtstar.codegenerator.utils.ConstantsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +22,6 @@ public class MetaService {
     @Autowired
     private DataHandlerChooser handlerChooser;
 
-    DefaultDataHandler dataHandler;
-
     /**
      * 获取所有表。
      *
@@ -36,14 +34,13 @@ public class MetaService {
      */
     public MetaContext getTables(DataSourceParams params) throws ClassNotFoundException, SQLException, GeneratorException {
         log.debug("begin connect database....");
-        dataHandler = handlerChooser.choose(params.getJdbcDriverName());
         Class.forName(params.getJdbcDriverName());
         MetaContext context = new MetaContext();
         Connection conn = null;
         try {
             conn = getConnection(params);
             DatabaseMetaData dm = conn.getMetaData();
-            getAllTableInfo(dm, dataHandler.getDataBaseName(params.getJdbcDriverUrl()), params.getJdbcSchema(), context);
+            getAllTableInfo(dm, params, context);
         } catch (SQLException sqlE) {
             log.error(sqlE.getMessage());
             throw new GeneratorException("数据库连接失败，请检查填写的数据库信息是否正确！");
@@ -86,14 +83,17 @@ public class MetaService {
      * 获取表信息。
      *
      * @param dm           dm
-     * @param schema       schema
-     * @param dataBaseName dataBaseName 数据库名
      * @param context      context
      * @throws SQLException sql exception
      */
-    private void getAllTableInfo(DatabaseMetaData dm, String dataBaseName, String schema, MetaContext context)
+    private void getAllTableInfo(DatabaseMetaData dm, DataSourceParams params, MetaContext context)
             throws SQLException {
         log.debug("begin parse database....");
+
+        String schema = params.getJdbcSchema();
+        DataTypeTransferHandler dataTypeTransferHandler = handlerChooser.choose(params.getJdbcDriverName());
+        String dataBaseName = dataTypeTransferHandler.getDataBaseName(params.getJdbcDriverUrl());
+
         /**
          * catalog: 目录（数据库名）
          * schema:
@@ -106,7 +106,7 @@ public class MetaService {
             // 获取主键信息，仅保存主键对应的字段名，用于获取字段列表时判断字段是否为主键。
             getRawPks(dm, dataBaseName, tmd);
             // column
-            getCols(dm, dataBaseName, tmd);
+            getCols(dm, dataBaseName, tmd, dataTypeTransferHandler);
             //唯一索引
             getUniqueKeys(dm, dataBaseName, tmd);
             //获取外键信息
@@ -181,11 +181,11 @@ public class MetaService {
      * @param table        table
      * @throws SQLException sql exception
      */
-    private void getCols(DatabaseMetaData dm, String dataBaseName, Table table)
+    private void getCols(DatabaseMetaData dm, String dataBaseName, Table table, DataTypeTransferHandler handler)
             throws SQLException {
         ResultSet rsCol = dm.getColumns(dataBaseName, table.getSchema(), table.getTableName(), null);
         while (rsCol.next()) {
-            table.addCol(getColumn(rsCol));
+            table.addCol(getColumn(rsCol, handler));
         }
     }
 
@@ -245,7 +245,7 @@ public class MetaService {
      * @return Column
      * @throws SQLException sql异常。
      */
-    private Column getColumn(ResultSet rsCol) throws SQLException {
+    private Column getColumn(ResultSet rsCol, DataTypeTransferHandler handler) throws SQLException {
         Column col = new Column();
 
         col.setColName(rsCol.getString(ConstantsUtils.COLUMN_NAME));
@@ -256,7 +256,7 @@ public class MetaService {
         String colType = rsCol.getString("TYPE_NAME");
         String digits = rsCol.getString("DECIMAL_DIGITS");
         col.setColType(colType);
-        col.setJavaType(dataHandler.parseDataType(colType));
+        col.setJavaType(handler.parseDataType(colType));
         col.setFormatCode(parseFormatCode(colType, digits));
         return col;
     }
