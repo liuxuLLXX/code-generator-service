@@ -38,7 +38,7 @@ public interface ${meta.className}${MapperSuffix} {
     /**
      * 修改
      *
-     * @param toolLifetimeWarning
+     * @param ${meta.firstLowerClassName}
      */
     void update(${meta.className} ${meta.firstLowerClassName});
 
