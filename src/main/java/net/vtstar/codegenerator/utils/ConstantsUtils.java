@@ -17,13 +17,22 @@ public class ConstantsUtils {
 
     public static final String TYPE_TIMESTAMP = "Long";
 
+    public static final String TYPE_Long = "Long";
+
     public static final String TYPE_INTEGER = "Integer";
 
     public static final String TYPE_DECIMAL = "BigDecimal";
 
     public static final String TYPE_CHARACTER = "Character";
 
+    public static final String TYPE_DATE = "java.util.Date";
+
     public static final String TYPE_SHORT = "short";
+
+    public static final String TYPE_INPUT_STREAM = "java.io.InputStream";
+
+    public static final String TYPE_READER = "java.io.Reader";
+
 
     public static final String MAPPER_PKG = "mapper";
 

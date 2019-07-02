@@ -27,22 +27,22 @@ public class MysqlDataTypeTransferHandler implements DataTypeTransferHandler {
             return ConstantsUtils.TYPE_INTEGER;
         }
         if ("BIGINT".equalsIgnoreCase(colType)) {
-            return "Long";
+            return ConstantsUtils.TYPE_Long;
         }
         if ("DECIMAL".equalsIgnoreCase(colType)) {
             return ConstantsUtils.TYPE_DECIMAL;
         }
         if ("DATETIME".equalsIgnoreCase(colType) || "TIMESTAMP(6)".equalsIgnoreCase(colType)
                 || "DATE".equalsIgnoreCase(colType)) {
-            return "java.util.Date";
+            return ConstantsUtils.TYPE_DATE;
         }
         if ("BLOB".equalsIgnoreCase(colType)) {
-            return "java.io.InputStream"; // [B
+            return ConstantsUtils.TYPE_INPUT_STREAM; // [B
         }
         if ("CLOB".equalsIgnoreCase(colType)) {
-            return "java.io.Reader";
+            return ConstantsUtils.TYPE_READER;
         }
-        return "String";
+        return ConstantsUtils.TYPE_STRING;
     }
 
     @Override

@@ -28,18 +28,18 @@ public class PostgreDataTypeTransferHandler implements DataTypeTransferHandler {
             return ConstantsUtils.TYPE_INTEGER;
         }
         if ("int8".equalsIgnoreCase(colType)) {
-            return "Long";
+            return ConstantsUtils.TYPE_Long;
         }
         if ("numeric".equalsIgnoreCase(colType)) {
             return ConstantsUtils.TYPE_DECIMAL;
         }
         if ("timestamptz".equalsIgnoreCase(colType) || "date".equalsIgnoreCase(colType)) {
-            return "java.util.Date";
+            return ConstantsUtils.TYPE_DATE;
         }
         if ("bytea".equalsIgnoreCase(colType)) {
-            return "java.io.InputStream"; // [B
+            return ConstantsUtils.TYPE_INPUT_STREAM; // [B
         }
-        return "String";
+        return ConstantsUtils.TYPE_STRING;
     }
 
     @Override
