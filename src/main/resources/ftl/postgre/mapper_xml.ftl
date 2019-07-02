@@ -85,7 +85,7 @@
         <set>
         <#list meta.cols as col>
             <if test="null != ${col.fieldName}">
-            ${col.colName} = ${r'#{' + col.fieldName + '}'}<#if col_index + 1 < meta.cols?size>,</#if>
+                ${col.colName} = ${r'#{' + col.fieldName + '}'}<#if col_index + 1 < meta.cols?size>,</#if>
             </if>
         </#list>
         </set>
