@@ -12,18 +12,18 @@
     <!-- sqlColumn-->
     <sql id="SQL_${meta.tableNameUC}_COLUMN">
         <#list meta.cols as col>
-            ${meta.tableAlias}_.${col.colName}<#if col_index + 1 < meta.cols?size>,</#if>
+        ${meta.tableAlias}_.${col.colName}<#if col_index + 1 < meta.cols?size>,</#if>
         </#list>
     </sql>
 
     <!-- sqlWhere -->
     <sql id="SQL_${meta.tableNameUC}_WHERE">
         <#list meta.cols as col>
-            <#if col.javaType == "String">
+        <#if col.javaType == "String">
         <if test="null != ${col.fieldName} and ${col.fieldName}.length() != 0">
-            <#else>
+        <#else>
         <if test="null != ${col.fieldName}">
-            </#if>
+        </#if>
             AND ${meta.tableAlias}_.${col.colName} = ${r'#{' + col.fieldName + '}'}
         </if>
         </#list>
@@ -54,18 +54,18 @@
     <insert id="create" parameterType="${pkgName}.${meta.module}.${domainFolder}.${meta.className}">
         insert into ${meta.tableNameUC}
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <#list meta.cols as col>
+        <#list meta.cols as col>
             <if test="null != ${col.fieldName}">
                 ${col.colName}<#if col_index + 1 < meta.cols?size>,</#if>
             </if>
-            </#list>
+        </#list>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <#list meta.cols as col>
+        <#list meta.cols as col>
             <if test="null != ${col.fieldName}">
                 ${r'#{' + col.fieldName + '}'}<#if col_index + 1 < meta.cols?size>,</#if>
             </if>
-            </#list>
+        </#list>
         </trim>
         <selectKey resultType="Long" order="AFTER" keyProperty="id">
             SELECT LAST_INSERT_ID() AS id
@@ -84,11 +84,11 @@
     <update id="update">
         update ${meta.tableNameUC}
         <set>
-            <#list meta.cols as col>
+        <#list meta.cols as col>
             <if test="null != ${col.fieldName}">
                 ${col.colName} = ${r'#{' + col.fieldName + '}'}<#if col_index + 1 < meta.cols?size>,</#if>
             </if>
-            </#list>
+        </#list>
         </set>
         where id = ${r'#{id}'}
     </update>

@@ -23,7 +23,11 @@ public class ${meta.className}${ServiceSuffix} {
     private ${meta.className}${MapperSuffix} ${meta.firstLowerClassName}${MapperSuffix};
 
     /**
-     * 分页查询
+     *  分页查询
+     *
+     * @param pageNum
+     * @param pageSize
+     * @return ${meta.firstLowerClassName}List
      */
     public List<${meta.className}> pageList(Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
@@ -33,6 +37,8 @@ public class ${meta.className}${ServiceSuffix} {
 
     /**
      * 新增
+     *
+     * @param ${meta.firstLowerClassName}
      */
     public void create(${meta.className} ${meta.firstLowerClassName}) {
         ParamAssert.notNull(${meta.firstLowerClassName}, "${meta.firstLowerClassName}不能为null！");
@@ -45,6 +51,8 @@ public class ${meta.className}${ServiceSuffix} {
 
     /**
      * 修改
+     *
+     * @param toolDefinition
      */
     public void update(${meta.className} ${meta.firstLowerClassName}) {
         ParamAssert.notNull(${meta.firstLowerClassName}, "${meta.firstLowerClassName}不能为null！");
@@ -53,9 +61,10 @@ public class ${meta.className}${ServiceSuffix} {
         ${meta.firstLowerClassName}${MapperSuffix}.update(${meta.firstLowerClassName});
     }
 
-
     /**
      * 根据id逻辑删除
+     *
+     * @param id
      */
     public void deleteById(Long id) {
         ${meta.firstLowerClassName}${MapperSuffix}.deleteById(id);

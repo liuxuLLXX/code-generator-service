@@ -12,7 +12,7 @@
     <!-- sqlColumn-->
     <sql id="SQL_${meta.tableNameUC}_COLUMN">
         <#list meta.cols as col>
-            ${meta.tableAlias}_.${col.colName}<#if col_index + 1 < meta.cols?size>,</#if>
+        ${meta.tableAlias}_.${col.colName}<#if col_index + 1 < meta.cols?size>,</#if>
         </#list>
     </sql>
 
@@ -21,12 +21,12 @@
         <#list meta.cols as col>
         <#if col.javaType == "String">
         <if test="null != ${col.fieldName} and ${col.fieldName}.length() != 0">
-            <#else>
-            <if test="null != ${col.fieldName}">
-                </#if>
-                AND ${meta.tableAlias}_.${col.colName} = ${r'#{' + col.fieldName + '}'}
-            </if>
-            </#list>
+        <#else>
+        <if test="null != ${col.fieldName}">
+        </#if>
+            AND ${meta.tableAlias}_.${col.colName} = ${r'#{' + col.fieldName + '}'}
+        </if>
+        </#list>
     </sql>
 
     <#--getList-->
@@ -55,18 +55,18 @@
     <insert id="create" parameterType="${pkgName}.${meta.module}.${domainFolder}.${meta.className}">
         insert into ${meta.tableNameUC}
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <#list meta.cols as col>
-                <if test="null != ${col.fieldName}">
-                    ${col.colName}<#if col_index + 1 < meta.cols?size>,</#if>
-                </if>
-            </#list>
+        <#list meta.cols as col>
+            <if test="null != ${col.fieldName}">
+                ${col.colName}<#if col_index + 1 < meta.cols?size>,</#if>
+            </if>
+        </#list>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <#list meta.cols as col>
-                <if test="null != ${col.fieldName}">
-                    ${r'#{' + col.fieldName + '}'}<#if col_index + 1 < meta.cols?size>,</#if>
-                </if>
-            </#list>
+        <#list meta.cols as col>
+            <if test="null != ${col.fieldName}">
+                ${r'#{' + col.fieldName + '}'}<#if col_index + 1 < meta.cols?size>,</#if>
+            </if>
+        </#list>
         </trim>
         returning id
     </insert>
@@ -83,11 +83,11 @@
     <update id="update">
         update ${meta.tableNameUC}
         <set>
-            <#list meta.cols as col>
-                <if test="null != ${col.fieldName}">
-                    ${col.colName} = ${r'#{' + col.fieldName + '}'}<#if col_index + 1 < meta.cols?size>,</#if>
-                </if>
-            </#list>
+        <#list meta.cols as col>
+            <if test="null != ${col.fieldName}">
+            ${col.colName} = ${r'#{' + col.fieldName + '}'}<#if col_index + 1 < meta.cols?size>,</#if>
+            </if>
+        </#list>
         </set>
         where id = ${r'#{id}'}
     </update>
