@@ -52,7 +52,7 @@ public class ${meta.className}${ServiceSuffix} {
     /**
      * 修改
      *
-     * @param toolDefinition
+     * @param ${meta.firstLowerClassName}
      */
     public void update(${meta.className} ${meta.firstLowerClassName}) {
         ParamAssert.notNull(${meta.firstLowerClassName}, "${meta.firstLowerClassName}不能为null！");
