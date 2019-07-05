@@ -66,7 +66,7 @@ public class ${meta.className}${ServiceSuffix} {
      *
      * @param id
      */
-    public void deleteById(Long id) {
+    public void deleteById(<#list meta.pkCols as pkCol><#if pkCol_index == 0>${pkCol.javaType}</#if></#list> id) {
         ${meta.firstLowerClassName}${MapperSuffix}.deleteById(id);
     }
 

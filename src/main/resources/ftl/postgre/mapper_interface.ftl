@@ -19,14 +19,13 @@ public interface ${meta.className}${MapperSuffix} {
      */
     List<${meta.className}> getList();
 
-
     /**
      * 根据id查询
      *
      * @param id
      * @return ${meta.className}
      */
-    ${meta.className} getById(Long id);
+    ${meta.className} getById(<#list meta.pkCols as pkCol><#if pkCol_index == 0>${pkCol.javaType}</#if></#list> id);
 
     /**
      * 新增
@@ -47,5 +46,5 @@ public interface ${meta.className}${MapperSuffix} {
      *
      * @param ${meta.firstLowerClassName}Id
      */
-    void deleteById(Long ${meta.firstLowerClassName}Id);
+    void deleteById(<#list meta.pkCols as pkCol><#if pkCol_index == 0>${pkCol.javaType}</#if></#list> ${meta.firstLowerClassName}Id);
 }

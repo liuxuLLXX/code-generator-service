@@ -62,7 +62,7 @@ public class ${meta.className}${ControllerSuffix} {
 
     @ApiOperation("删除${meta.tableDesc}（根据id删除单个${meta.tableDesc}）")
     @DeleteMapping("/{id}")
-    private Return delete(@PathVariable Long id) {
+    private Return delete(@PathVariable <#list meta.pkCols as pkCol><#if pkCol_index == 0>${pkCol.javaType}</#if></#list> id) {
         ParamAssert.notNull(id, "${meta.tableDesc}Id is null");
         ${meta.firstLowerClassName}Service.deleteById(id);
         return Return.success();
