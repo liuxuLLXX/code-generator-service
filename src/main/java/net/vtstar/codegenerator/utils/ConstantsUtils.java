@@ -91,5 +91,4 @@ public class ConstantsUtils {
 
     public static final String SERVICE_PATH = "/service.ftl";
 
-
 }

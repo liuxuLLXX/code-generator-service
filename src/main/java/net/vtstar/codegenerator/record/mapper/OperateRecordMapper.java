@@ -12,7 +12,6 @@ import java.util.List;
 @Mapper
 public interface OperateRecordMapper {
 
-
     /**
      * 分页查询
      */

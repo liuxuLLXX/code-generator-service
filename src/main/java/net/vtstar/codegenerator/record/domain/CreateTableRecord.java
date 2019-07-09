@@ -40,5 +40,4 @@ public class CreateTableRecord {
 
     private List<CreateColumnRecord> columnRecordList;
     
-
 }

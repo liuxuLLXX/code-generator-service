@@ -54,7 +54,6 @@ public class CreateColumnRecordService{
         createColumnRecordMapper.update(createColumnRecord);
     }
 
-
     /**
      * 根据id逻辑删除
      */

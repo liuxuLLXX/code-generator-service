@@ -19,7 +19,6 @@ public interface CreateTableRecordMapper {
      */
     List<CreateTableRecord> getList();
 
-
     /**
      * 根据id查询
      */

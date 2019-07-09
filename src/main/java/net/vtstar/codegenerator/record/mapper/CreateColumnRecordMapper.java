@@ -19,7 +19,6 @@ public interface CreateColumnRecordMapper {
      */
     List<CreateColumnRecord> getList();
 
-
     /**
      * 根据id查询
      */

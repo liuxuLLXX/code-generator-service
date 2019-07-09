@@ -39,5 +39,4 @@ public class CreateColumnRecord {
     @ApiModelProperty(notes = "更新时间")
     private Date updateTime;
     
-
 }

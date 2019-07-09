@@ -13,8 +13,7 @@ import java.util.zip.ZipOutputStream;
  */
 @Slf4j
 public final class ZipUtils {
-    private ZipUtils() {
-    }
+    private ZipUtils() {}
 
     /**
      * 创建ZIP文件

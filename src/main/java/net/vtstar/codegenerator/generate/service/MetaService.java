@@ -82,8 +82,8 @@ public class MetaService {
     /**
      * 获取表信息。
      *
-     * @param dm           dm
-     * @param context      context
+     * @param dm      dm
+     * @param context context
      * @throws SQLException sql exception
      */
     private void getAllTableInfo(DatabaseMetaData dm, DataSourceParams params, MetaContext context)
@@ -144,12 +144,9 @@ public class MetaService {
     private Table getBaseInfoTable(ResultSet rs)
             throws SQLException {
         Table tmd = new Table();
-
-
         tmd.setTableName(rs.getString("TABLE_NAME"));
         tmd.setTableDesc(rs.getString("REMARKS") == null ? "" : rs.getString("REMARKS"));
         tmd.setSchema(rs.getString("TABLE_SCHEM"));
-
         return tmd;
     }
 
@@ -228,7 +225,6 @@ public class MetaService {
             }
 
             ForeignKey fk = new ForeignKey();
-
             fk.setPkColumn(table.getCol(fks.getString(ConstantsUtils.PKCOLUMN_NAME)));
             fk.setFkTableName(fks.getString(ConstantsUtils.FKTABLE_NAME));
             fk.setFkColumnName(fks.getString(ConstantsUtils.FKCOLUMN_NAME));

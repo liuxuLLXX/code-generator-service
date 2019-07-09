@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import net.vtstar.codegenerator.generate.domain.DataSourceParams;
 import net.vtstar.codegenerator.generate.domain.GenVo;
-import net.vtstar.codegenerator.generate.domain.GeneratorConfig;
 import net.vtstar.codegenerator.generate.domain.Table;
 import net.vtstar.codegenerator.generate.service.GeneratorService;
 import net.vtstar.codegenerator.generate.service.MetaService;

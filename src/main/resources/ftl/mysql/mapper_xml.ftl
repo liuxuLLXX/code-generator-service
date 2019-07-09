@@ -79,7 +79,6 @@
         where id = ${r'#{id}'}
     </update>
 
-
     <!-- update -->
     <update id="update">
         update ${meta.tableNameUC}

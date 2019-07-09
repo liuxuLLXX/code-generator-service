@@ -28,5 +28,4 @@ public class ${meta.className} {
     private ${col.javaType} ${col.fieldName};
     ${""}
     </#list>
-
 }

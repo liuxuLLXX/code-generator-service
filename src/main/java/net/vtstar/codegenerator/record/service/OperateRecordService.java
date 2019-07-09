@@ -56,7 +56,6 @@ public class OperateRecordService{
         operateRecordMapper.update(operateRecord);
     }
 
-
     /**
      * 根据id逻辑删除
      */

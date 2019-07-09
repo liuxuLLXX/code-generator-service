@@ -55,7 +55,6 @@ public class CreateTableRecordService{
         createTableRecordMapper.update(createTableRecord);
     }
 
-
     /**
      * 根据id逻辑删除
      */
