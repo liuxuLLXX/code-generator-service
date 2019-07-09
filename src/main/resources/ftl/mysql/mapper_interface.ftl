@@ -17,7 +17,7 @@ public interface ${meta.className}${MapperSuffix} {
      *
      * @return List<${meta.className}>
      */
-    List<${meta.className}> getList();
+    List<${meta.className}> findList();
 
     /**
      * 根据id查询
@@ -32,7 +32,7 @@ public interface ${meta.className}${MapperSuffix} {
      *
      * @param ${meta.firstLowerClassName}
      */
-    void create(${meta.className} ${meta.firstLowerClassName});
+    void save(${meta.className} ${meta.firstLowerClassName});
 
     /**
      * 修改

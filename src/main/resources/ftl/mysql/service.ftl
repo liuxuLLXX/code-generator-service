@@ -31,7 +31,7 @@ public class ${meta.className}${ServiceSuffix} {
      */
     public List<${meta.className}> pageList(Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<${meta.className}> ${meta.firstLowerClassName}List = ${meta.firstLowerClassName}${MapperSuffix}.getList();
+        List<${meta.className}> ${meta.firstLowerClassName}List = ${meta.firstLowerClassName}${MapperSuffix}.findList();
         return ${meta.firstLowerClassName}List;
     }
 
@@ -40,12 +40,12 @@ public class ${meta.className}${ServiceSuffix} {
      *
      * @param ${meta.firstLowerClassName}
      */
-    public void create(${meta.className} ${meta.firstLowerClassName}) {
+    public void save(${meta.className} ${meta.firstLowerClassName}) {
         ParamAssert.notNull(${meta.firstLowerClassName}, "${meta.firstLowerClassName}不能为null！");
         ${meta.firstLowerClassName}.setStatus("1");
         ${meta.firstLowerClassName}.setCreateTime(new Date());
         ${meta.firstLowerClassName}.setUpdateTime(new Date());
-        ${meta.firstLowerClassName}${MapperSuffix}.create(${meta.firstLowerClassName});
+        ${meta.firstLowerClassName}${MapperSuffix}.save(${meta.firstLowerClassName});
 
     }
 

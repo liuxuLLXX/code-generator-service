@@ -31,7 +31,7 @@
 
     <#--getList-->
     <!-- Query All  -->
-    <select id="getList" parameterType="${pkgName}.${meta.module}.${domainFolder}.${meta.className}" resultMap="${meta.firstLowerClassName}Map">
+    <select id="findList" parameterType="${pkgName}.${meta.module}.${domainFolder}.${meta.className}" resultMap="${meta.firstLowerClassName}Map">
         select
         <include refid="SQL_${meta.tableNameUC}_COLUMN"/>
         from ${meta.tableNameUC} ${meta.tableAlias}_
@@ -51,7 +51,7 @@
 
     <#--create-->
     <!-- 新增 -->
-    <insert id="create" parameterType="${pkgName}.${meta.module}.${domainFolder}.${meta.className}">
+    <insert id="save" parameterType="${pkgName}.${meta.module}.${domainFolder}.${meta.className}">
         insert into ${meta.tableNameUC}
         <trim prefix="(" suffix=")" suffixOverrides=",">
         <#list meta.cols as col>

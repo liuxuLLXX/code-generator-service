@@ -47,8 +47,8 @@ public class ${meta.className}${ControllerSuffix} {
 
     @ApiOperation("新建${meta.tableDesc}")
     @PostMapping
-    private Return create(@Valid @RequestBody ${meta.className} ${meta.firstLowerClassName}) {
-        ${meta.firstLowerClassName}${ServiceSuffix}.create(${meta.firstLowerClassName});
+    private Return save(@Valid @RequestBody ${meta.className} ${meta.firstLowerClassName}) {
+        ${meta.firstLowerClassName}${ServiceSuffix}.save(${meta.firstLowerClassName});
         return Return.success();
     }
 
