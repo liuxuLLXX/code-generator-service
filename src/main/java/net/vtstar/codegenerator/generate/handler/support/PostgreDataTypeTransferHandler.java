@@ -33,7 +33,9 @@ public class PostgreDataTypeTransferHandler implements DataTypeTransferHandler {
         if ("numeric".equalsIgnoreCase(colType)) {
             return ConstantsUtils.TYPE_DECIMAL;
         }
-        if ("timestamptz".equalsIgnoreCase(colType) || "date".equalsIgnoreCase(colType)) {
+        if ("timestamptz".equalsIgnoreCase(colType)
+                || "date".equalsIgnoreCase(colType)
+                || "timestamp".equalsIgnoreCase(colType)) {
             return ConstantsUtils.TYPE_DATE;
         }
         if ("bytea".equalsIgnoreCase(colType)) {

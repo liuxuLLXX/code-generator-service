@@ -46,7 +46,6 @@ public class ${meta.className}${ServiceSuffix} {
         ${meta.firstLowerClassName}.setCreateTime(new Date());
         ${meta.firstLowerClassName}.setUpdateTime(new Date());
         ${meta.firstLowerClassName}${MapperSuffix}.save(${meta.firstLowerClassName});
-
     }
 
     /**
