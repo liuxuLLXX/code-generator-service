@@ -1,7 +1,7 @@
 package net.vtstar.codegenerator.generate.service;
 
 import lombok.extern.slf4j.Slf4j;
-import net.vtstar.codegenerator.generate.advice.exception.GeneratorException;
+import net.vtstar.codegenerator.base.advice.exception.GeneratorException;
 import net.vtstar.codegenerator.generate.handler.DataTypeTransferHandler;
 import net.vtstar.codegenerator.generate.domain.*;
 import net.vtstar.codegenerator.utils.ConstantsUtils;

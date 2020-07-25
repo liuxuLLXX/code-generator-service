@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import net.vtstar.codegenerator.utils.CamelCaseUtil;
-import net.vtstar.utils.StrUtils;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.*;
@@ -241,7 +241,7 @@ public class Table implements Serializable {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Table) {
-            if (StrUtils.isNullOrBlank(tableName)) {
+            if (StringUtils.isEmpty(tableName)) {
                 return false;
             }
             Table that = (Table) obj;

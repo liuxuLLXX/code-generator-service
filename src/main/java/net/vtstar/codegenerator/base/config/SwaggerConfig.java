@@ -1,4 +1,4 @@
-package net.vtstar.codegenerator.config;
+package net.vtstar.codegenerator.base.config;
 
 import com.spring4all.swagger.EnableSwagger2Doc;
 import org.springframework.context.annotation.Configuration;

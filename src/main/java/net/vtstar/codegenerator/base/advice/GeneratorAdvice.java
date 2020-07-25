@@ -1,11 +1,9 @@
-package net.vtstar.codegenerator.generate.advice;
+package net.vtstar.codegenerator.base.advice;
 
-import com.alibaba.fastjson.JSON;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import freemarker.core.InvalidReferenceException;
 import lombok.extern.slf4j.Slf4j;
-import net.vtstar.utils.domain.Return;
-import net.vtstar.utils.exception.KnownException;
+import net.vtstar.codegenerator.base.advice.exception.GeneratorException;
+import net.vtstar.codegenerator.generate.domain.Return;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
@@ -31,7 +29,7 @@ public class GeneratorAdvice {
         if (ex instanceof IllegalArgumentException) {
             log.warn(msg);
             return Return.failed(msg);
-        } else if (ex instanceof KnownException) {
+        } else if (ex instanceof GeneratorException) {
             log.warn(msg);
             return Return.failed(msg);
         } else if (ex instanceof BindException) {

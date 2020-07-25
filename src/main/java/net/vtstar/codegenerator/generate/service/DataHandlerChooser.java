@@ -1,7 +1,7 @@
 package net.vtstar.codegenerator.generate.service;
 
+import net.vtstar.codegenerator.base.utils.ParamAssert;
 import net.vtstar.codegenerator.generate.handler.DataTypeTransferHandler;
-import net.vtstar.utils.asserts.ParamAssert;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
